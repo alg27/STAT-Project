@@ -1,25 +1,146 @@
 ---
-title: "Final_Project_Draft_1"
+title: "STAT 405 FInal Project Draft 1"
 format: html
+editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+options(bitmapType='cairo')
+x11(type='cairo')
 ```
 
-You can add options to executable code like this 
+
 
 ```{r}
-#| echo: false
-2 * 2
+library(lubridate)
+library(dplyr)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+df <- read.csv("smaller_taxicab_data.csv")
+
+#Filters out all values based on some conditions
+df <- df %>%
+  mutate(
+    pickup_time = mdy_hms(tpep_pickup_datetime),
+    dropoff_time = mdy_hms(tpep_dropoff_datetime),
+    trip_time = as.numeric(difftime(dropoff_time, pickup_time, units = "mins")),
+    speed = trip_distance / (trip_time/ 60), # Speed in miles per hour
+    fare_per_mile = if_else(trip_distance > 0, fare_amount / trip_distance, NA_real_) # Handle division by zero
+  ) %>%
+  #filter stuff
+  filter(
+    !is.na(fare_per_mile),
+    fare_per_mile < 50,
+    speed <= 120,
+    speed >= .15,
+    fare_amount > 0,
+    #trip must be longer than 10 seconds
+    trip_time > (10/60),
+    trip_time < 600,
+    extra >= 0,
+    mta_tax >= 0,
+    tip_amount >= 0,
+    tolls_amount >= 0,
+    improvement_surcharge >= 0,
+    congestion_surcharge >= 0,
+    total_amount >= 0
+  )
+```
+
+
+```{r}
+# Scatter plot of Trip Distance vs. Fare Amount
+trip_distance <- df$trip_distance
+fare_amount <- df$fare_amount
+plot(trip_distance, fare_amount)
+```
+
+
+
+
+```{r}
+# Histogram of Trip Times less than 100 minutes for ease of viewing
+trip_time <- df$trip_time[df$trip_time < 100]
+hist(trip_time)
+```
+```{r}
+```
+
+
+```{r}
+boxplot(df$speed)
+```
+
+```{r}
+# Box plot of speed
+boxplot(df$speed)
+```
+
+```{r}
+# Pie Chart of payment methods
+df_grouped_payments <- df %>% group_by(df$payment_type) %>% summarise(payment_total = sum(payment_type))
+df_grouped_payments <- df_grouped_payments %>% filter(row_number() <= n()-1)
+labels <- c("Credit Card","Cash","No Charge","Dispute")
+pie(df_grouped_payments$payment_total, labels = labels, main = "How the Passengers Paid for the Trip")
+```
+
+```{r}
+# Density plot of pick up and drop off locations
+plot(density(df$PULocationID), main = "Density Plot of Pick Up and Drop off Location", xlab = "Location ID", ylab = "Density", ylim = c(0, 0.04), col = "red")
+lines(density(df$PULocationID), col = "red", lwd = 2)
+par(new = TRUE)
+plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04), col = "blue")
+lines(density(df$DOLocationID), col = "blue", lwd = 2)
+```
+
+
+```{r}
+# Line chart of month and number of taxi trips
+# Extract month from date_column
+data$month <- format(data$date, "%Y-%m")
+
+# Group by month and calculate the total count for each month
+monthly_counts <- data %>%
+  group_by(month) %>%
+  summarise(count = n())
+
+plot(c(1:12), monthly_counts$count, type = "l", main = "Line Plot of Taxi Rides per Month", xlab = "Month", ylab = "Number of Taxi Rides", xaxt = "n"); axis(1, at = 1:12, labels = month.abb)
+
+```
+
+
+
+
+# Statistical Modeling
+
+```{r}
+data <- data %>%
+  mutate(date = as.Date(pickup_time))
+
+daily_counts_year <- data %>%
+  group_by(date) %>%
+  summarise(count = n())
+
+ts_data_year <- ts(daily_counts_year$count, start = c(2021, 1), end = c(2021, 365), frequency = 365)
+
+# Time Series Plotting: Visualize the time series to understand its patterns and trends over time
+plot(ts_data_year, main = "Taxi Rides per Day for the Year 2021", xlab = "Month", ylab = "Number of Taxi Rides", xaxt = "n")
+axis(1, at = 1:12, labels = month.abb)
+
+# Time Series Decomposition: Decompose the time series into its trend, seasonality, and residual components to better understand its underlying patterns
+decomposed <- decompose(ts_data_year)
+plot(decomposed)
+
+# Time Series Forecasting: Forecasting future values of the time series
+library(forecast) 
+forecast_model <- forecast(auto.arima(ts_data_year))
+plot(forecast_model)
+
+# Seasonal Decomposition of Time Series (STL): Decompose the time series into seasonal, trend, and remainder components
+stl_decomposed <- stl(ts_data_year, s.window = "periodic")
+plot(stl_decomposed)
+```
+
+
