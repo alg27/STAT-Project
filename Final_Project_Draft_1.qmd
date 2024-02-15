@@ -1,21 +1,36 @@
 ---
-title: "STAT 405 FInal Project Draft 1"
-format: html
+title: "The Pulse of the City: Unveiling NYC Taxi Patterns - Group 13 Final Project"
+author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
+date: '2/15/2024'
+format:
+  pdf: default
+  html: default
+pdf-engine: pdflatex
 editor: visual
+fontsize: 10pt
+geometry: margin=1in
+toc: true                   
+toc-depth: 2  
 ---
+
+# Introduction
+
+New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
+
+Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day. 
+
+# Plots
+
 
 ```{r}
 options(bitmapType='cairo')
 x11(type='cairo')
 ```
 
-
-
 ```{r}
 library(lubridate)
 library(dplyr)
 ```
-
 
 ```{r}
 df <- read.csv("smaller_taxicab_data.csv")
