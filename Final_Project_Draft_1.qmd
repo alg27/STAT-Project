@@ -17,10 +17,9 @@ toc-depth: 2
 
 New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
 
-Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day. 
+Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
 # Plots
-
 
 ```{r}
 options(bitmapType='cairo')
@@ -64,7 +63,6 @@ df <- df %>%
   )
 ```
 
-
 ```{r}
 # Scatter plot of Trip Distance vs. Fare Amount
 trip_distance <- df$trip_distance
@@ -72,17 +70,14 @@ fare_amount <- df$fare_amount
 plot(trip_distance, fare_amount)
 ```
 
-
-
-
 ```{r}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time)
 ```
+
 ```{r}
 ```
-
 
 ```{r}
 boxplot(df$speed)
@@ -110,7 +105,6 @@ plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
 ```
 
-
 ```{r}
 # Line chart of month and number of taxi trips
 # Extract month from date_column
@@ -124,9 +118,6 @@ monthly_counts <- data %>%
 plot(c(1:12), monthly_counts$count, type = "l", main = "Line Plot of Taxi Rides per Month", xlab = "Month", ylab = "Number of Taxi Rides", xaxt = "n"); axis(1, at = 1:12, labels = month.abb)
 
 ```
-
-
-
 
 # Statistical Modeling
 
@@ -157,5 +148,3 @@ plot(forecast_model)
 stl_decomposed <- stl(ts_data_year, s.window = "periodic")
 plot(stl_decomposed)
 ```
-
-
