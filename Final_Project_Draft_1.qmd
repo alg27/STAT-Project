@@ -81,6 +81,16 @@ plot(trip_distance, fare_amount)
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time)
 ```
+<<<<<<< HEAD
+=======
+
+```{r}
+```
+
+```{r}
+boxplot(df$speed)
+```
+>>>>>>> 8201de8c1b29aad9035dc0bb292f726ed225d7d3
 
 ```{r}
 # Box plot of speed
