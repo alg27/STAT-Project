@@ -45,7 +45,10 @@ df <- df %>%
   ) %>%
   #filter stuff
   filter(
+    month(dropoff_time) < 4,
     year(dropoff_time) == 2021,
+    !is.na(pickup_time),
+    !is.na(dropoff_time),
     year(pickup_time) == 2021,
     !is.na(fare_per_mile),
     fare_per_mile < 50,
@@ -80,13 +83,6 @@ hist(trip_time)
 ```
 
 ```{r}
-```
-
-```{r}
-boxplot(df$speed)
-```
-
-```{r}
 # Box plot of speed
 boxplot(df$speed)
 ```
@@ -108,27 +104,45 @@ plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
 ```
 
+max_count \<- max(monthly_counts\$Count)
+
+\# Plotting with y-axis starting at 0
+
+plot(monthly_counts\$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per Month", xlab = "Month", ylab = "Number of Rides")
+
+axis(1, at = 1:length(monthly_counts\$Month), labels = monthly_counts\$Month)
+
 ```{r}
 # Line chart of month and number of taxi trips
-# Extract month from date_column
-data$month <- format(data$date, "%Y-%m")
+# Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
+df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
 
-# Group by month and calculate the total count for each month
-monthly_counts <- data %>%
-  group_by(month) %>%
-  summarise(count = n())
+# Check if there are any NA values after conversion, which indicate parsing issues
+sum(is.na(df$tpep_pickup_datetime))
 
-plot(c(1:12), monthly_counts$count, type = "l", main = "Line Plot of Taxi Rides per Month", xlab = "Month", ylab = "Number of Taxi Rides", xaxt = "n"); axis(1, at = 1:12, labels = month.abb)
+
+# Extract month as a separate column
+df$month <- format(df$tpep_pickup_datetime, "%m")
+
+# Sort the data by month to ensure it's in chronological order
+monthly_counts <- aggregate(x = list(Count = rep(1, nrow(df))), by = list(Month = df$month), FUN = sum)
+# Plot
+max_count <- max(monthly_counts$Count)
+
+# Plotting with y-axis starting at 0
+plot(monthly_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per Month", xlab = "Month", ylab = "Number of Rides")
+axis(1, at = 1:length(monthly_counts$Month), labels = monthly_counts$Month)
+
 
 ```
 
 # Statistical Modeling
 
 ```{r}
-data <- data %>%
+df <- df %>%
   mutate(date = as.Date(pickup_time))
 
-daily_counts_year <- data %>%
+daily_counts_year <- df %>%
   group_by(date) %>%
   summarise(count = n())
 
