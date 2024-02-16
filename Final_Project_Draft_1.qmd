@@ -30,7 +30,7 @@ x11(type='cairo')
 library(lubridate)
 library(dplyr)
 ```
-
+#Data cleaning
 ```{r}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 
