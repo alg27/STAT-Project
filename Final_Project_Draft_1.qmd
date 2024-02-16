@@ -68,7 +68,8 @@ df <- df %>%
     passenger_count <20
   )
 ```
-
+# Plot 1
+For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well.
 ```{r}
 # Scatter plot of Trip Distance vs. Fare Amount
 trip_distance <- df$trip_distance
@@ -76,16 +77,26 @@ fare_amount <- df$fare_amount
 plot(trip_distance, fare_amount)
 ```
 
+
+# Plot 2
+
+This plot shows the distribution of trip times for all of the rides. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. This data is right skewed, which makes sense considering that people usually hail a taxi to go a few miles. 
 ```{r}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time)
 ```
+# Plot 3 
 
+This plot shows the average speed of the taxi driver over their trip. We can see that the taxi drivers usually drive between 15 and 17 miles per hour. However, there are a lot of outliers due to the 4 million points we have, and these are most likely caused by timing issues or incredibly short rides that cause the speed to seem very high (the taxi driver might have forgotten to start the time well into the trip)
 ```{r}
 # Box plot of speed
 boxplot(df$speed)
 ```
+
+# Plot 4
+
+This pllot shows the different payment methods that customers used for the taxi. We can see that the majority of people (~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment. 
 
 ```{r}
 # Pie Chart of payment methods
@@ -94,6 +105,10 @@ df_grouped_payments <- df_grouped_payments %>% filter(row_number() <= n()-1)
 labels <- c("Credit Card","Cash","No Charge","Dispute")
 pie(df_grouped_payments$payment_total, labels = labels, main = "How the Passengers Paid for the Trip")
 ```
+
+#Plot 5
+
+Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. 
 
 ```{r}
 # Density plot of pick up and drop off locations
@@ -104,7 +119,9 @@ plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
 ```
 
+# Plot 6
 
+This plot shows the toal number of rides per month for Jan, Feb, and Mar. We can see that there were a lot more rides in March, suggesting that tourists may come visit New York in the spring, causing more taxicab rides to happen.  
 ```{r}
 # Line chart of month and number of taxi trips
 # Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
