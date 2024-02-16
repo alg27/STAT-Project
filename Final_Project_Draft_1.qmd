@@ -81,16 +81,6 @@ plot(trip_distance, fare_amount)
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time)
 ```
-<<<<<<< HEAD
-=======
-
-```{r}
-```
-
-```{r}
-boxplot(df$speed)
-```
->>>>>>> 8201de8c1b29aad9035dc0bb292f726ed225d7d3
 
 ```{r}
 # Box plot of speed
@@ -114,13 +104,6 @@ plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
 ```
 
-max_count \<- max(monthly_counts\$Count)
-
-\# Plotting with y-axis starting at 0
-
-plot(monthly_counts\$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per Month", xlab = "Month", ylab = "Number of Rides")
-
-axis(1, at = 1:length(monthly_counts\$Month), labels = monthly_counts\$Month)
 
 ```{r}
 # Line chart of month and number of taxi trips
@@ -142,7 +125,6 @@ max_count <- max(monthly_counts$Count)
 # Plotting with y-axis starting at 0
 plot(monthly_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per Month", xlab = "Month", ylab = "Number of Rides")
 axis(1, at = 1:length(monthly_counts$Month), labels = monthly_counts$Month)
-
 
 ```
 
