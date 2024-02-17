@@ -30,7 +30,9 @@ x11(type='cairo')
 library(lubridate)
 library(dplyr)
 ```
+
 #Data cleaning
+
 ```{r}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 
@@ -47,6 +49,8 @@ df <- df %>%
   filter(
     month(dropoff_time) < 4,
     year(dropoff_time) == 2021,
+    hour(dropoff_time) != 0 & minute(dropoff_time) != 0 & second(dropoff_time) != 0,
+    hour(pickup_time) != 0 & minute(pickup_time) != 0 & second(pickup_time) != 0,
     !is.na(pickup_time),
     !is.na(dropoff_time),
     year(pickup_time) == 2021,
@@ -65,11 +69,15 @@ df <- df %>%
     improvement_surcharge >= 0,
     congestion_surcharge >= 0,
     total_amount >= 0,
-    passenger_count <20
+    passenger_count < 20,
+    passenger_count > 0
   )
 ```
+
 # Plot 1
+
 For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well.
+
 ```{r}
 # Scatter plot of Trip Distance vs. Fare Amount
 trip_distance <- df$trip_distance
@@ -77,26 +85,28 @@ fare_amount <- df$fare_amount
 plot(trip_distance, fare_amount)
 ```
 
-
 # Plot 2
 
-This plot shows the distribution of trip times for all of the rides. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. This data is right skewed, which makes sense considering that people usually hail a taxi to go a few miles. 
+This plot shows the distribution of trip times for all of the rides. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. This data is right skewed, which makes sense considering that people usually hail a taxi to go a few miles.
+
 ```{r}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time)
 ```
-# Plot 3 
+
+# Plot 3
 
 This plot shows the average speed of the taxi driver over their trip. We can see that the taxi drivers usually drive between 15 and 17 miles per hour. However, there are a lot of outliers due to the 4 million points we have, and these are most likely caused by timing issues or incredibly short rides that cause the speed to seem very high (the taxi driver might have forgotten to start the time well into the trip)
+
 ```{r}
 # Box plot of speed
-boxplot(df$speed)
+boxplot(df$speed, ylab = "speed")
 ```
 
 # Plot 4
 
-This pllot shows the different payment methods that customers used for the taxi. We can see that the majority of people (~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment. 
+This pllot shows the different payment methods that customers used for the taxi. We can see that the majority of people (\~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment.
 
 ```{r}
 # Pie Chart of payment methods
@@ -108,7 +118,7 @@ pie(df_grouped_payments$payment_total, labels = labels, main = "How the Passenge
 
 #Plot 5
 
-Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. 
+Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc.
 
 ```{r}
 # Density plot of pick up and drop off locations
@@ -121,33 +131,26 @@ lines(density(df$DOLocationID), col = "blue", lwd = 2)
 
 # Plot 6
 
-This plot shows the toal number of rides per month for Jan, Feb, and Mar. We can see that there were a lot more rides in March, suggesting that tourists may come visit New York in the spring, causing more taxicab rides to happen.  
+This plot shows the total number of rides per day between Jan and Mar. We can see that there is a consistent dip in the number of rides around every 6 days, mostly on Sunday's, implying that people stay at home or don't travel as much on the weekends in New York.
+
 ```{r}
 # Line chart of month and number of taxi trips
 # Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
-df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+df$day <- format(df$pickup_time, "%Y-%m-%d")
 
-# Check if there are any NA values after conversion, which indicate parsing issues
-sum(is.na(df$tpep_pickup_datetime))
-
-
-# Extract month as a separate column
-df$month <- format(df$tpep_pickup_datetime, "%m")
-
-# Sort the data by month to ensure it's in chronological order
-monthly_counts <- aggregate(x = list(Count = rep(1, nrow(df))), by = list(Month = df$month), FUN = sum)
+# Sort the data by day to ensure it's in chronological order
+daily_counts <- aggregate(x = list(Count = rep(1, nrow(df))), by = list(Day = df$day), FUN = sum)
 # Plot
-max_count <- max(monthly_counts$Count)
+max_count <- max(daily_counts$Count)
 
 # Plotting with y-axis starting at 0
-plot(monthly_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per Month", xlab = "Month", ylab = "Number of Rides")
-axis(1, at = 1:length(monthly_counts$Month), labels = monthly_counts$Month)
+plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per day", xlab = "Day", ylab = "Number of Rides"); axis(1, at = 1:length(daily_counts$Day), labels = daily_counts$Month)
 
 ```
 
 # Statistical Modeling
 
-We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is $3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. 
+We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot seems gaussian, revealing linearity. 
 
 ```{r}
 x <- df$trip_distance
@@ -155,5 +158,20 @@ y <- df$fare_amount
 
 linear_model <- lm(y ~ x)
 summary(linear_model)
+```
+```{r}
+yhat = fitted(linear_model)
+ehat = residuals(linear_model)
+
+plot(yhat, ehat)
+abline(h=0)
+```
+
+
+
+```{r}
+rhat = rstandard(linear_model)
+qqnorm(rhat)
+qqline(rhat)
 ```
 
