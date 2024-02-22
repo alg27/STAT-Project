@@ -29,6 +29,7 @@ x11(type='cairo')
 ```{r}
 library(lubridate)
 library(dplyr)
+library(ggplot2)
 ```
 
 #Data cleaning
