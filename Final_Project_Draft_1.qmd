@@ -83,7 +83,10 @@ For this plot, we are examining the relationship between the trip distance and t
 # Scatter plot of Trip Distance vs. Fare Amount
 trip_distance <- df$trip_distance
 fare_amount <- df$fare_amount
-plot(trip_distance, fare_amount)
+plot(trip_distance, fare_amount, 
+     sub = "Trip Distance vs. Fare Amount",
+     xlab = "Trip Distance", 
+     ylab = "Fare Amount")
 ```
 
 # Plot 2 Histogram of Trip Time
@@ -93,7 +96,8 @@ This plot shows the distribution of trip times for all of the rides. We can see 
 ```{r, echo = FALSE}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
-hist(trip_time)
+hist(trip_time,
+     xlab = "Trip Time")
 ```
 
 # Plot 3 Boxplot of average speed
@@ -228,7 +232,10 @@ Rate Code IDs:
 ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
   geom_violin(trim = FALSE, fill = 'skyblue', color = 'blue', alpha = 0.7) +
   stat_summary(fun = median, geom = "point", shape = 23, size = 3, color = "darkred", fill = "yellow") +
-  stat_summary(fun = median, geom = "text", aes(label = round(..y.., 2)), vjust = -1, color = "darkgreen") +
+  stat_summary(fun = median, 
+               geom = "text", 
+               aes(label = round(after_stat(y), 2)), 
+               vjust = -1, color = "darkgreen") +
   labs(title = "Violin Plot of Fare Amount by Rate Code",
        x = "Rate Code ID",
        y = "Fare Amount ($)") +
