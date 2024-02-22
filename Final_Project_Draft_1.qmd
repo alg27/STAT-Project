@@ -130,7 +130,7 @@ pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages)
 ```
 
 
-#Plot 5 Density of Pick up and Drop off location
+# Plot 5 Density of Pick up and Drop off location
 Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc.
 
 ```{r, echo = FALSE}
