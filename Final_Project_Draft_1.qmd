@@ -128,6 +128,8 @@ lines(density(df$PULocationID), col = "red", lwd = 2)
 par(new = TRUE)
 plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04), col = "blue")
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
+
+
 ```
 
 # Plot 6
@@ -149,9 +151,24 @@ plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = 
 
 ```
 
+#Plot 7 
+
+Displayed below is the relationship between tip amounts and total amounts from the dataset. This is usefule because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
+
+```{r}
+library(ggplot2)
+
+ggplot(df, aes(x = tip_amount, y = total_amount)) +
+  geom_point(color = "purple") +
+  labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", x = "Tip Amount ($)", y = "Total Amount ($)")
+
+
+```
+
+
 # Statistical Modeling
 
-We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot seems gaussian, revealing linearity. 
+We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot seems gaussian, revealing linearity.
 
 ```{r}
 x <- df$trip_distance
@@ -160,6 +177,7 @@ y <- df$fare_amount
 linear_model <- lm(y ~ x)
 summary(linear_model)
 ```
+
 ```{r}
 yhat = fitted(linear_model)
 ehat = residuals(linear_model)
@@ -168,11 +186,8 @@ plot(yhat, ehat)
 abline(h=0)
 ```
 
-
-
 ```{r}
 rhat = rstandard(linear_model)
 qqnorm(rhat)
 qqline(rhat)
 ```
-
