@@ -273,7 +273,7 @@ ggplot(df, aes(x = trip_distance)) +
 ```
 
 
-#Plot 13 Scatterplot of Tip Amounts and Total Amounts 
+# Plot 13 Scatterplot of Tip Amounts and Total Amounts 
 Displayed below is the relationship between tip amounts and total amounts from the dataset. This is useful because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
 
 ```{r}
@@ -283,7 +283,7 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
 ```
 
 
-#Plot 14 scatter plot between the Mean Fare Amount and the Passenger Count
+# Plot 14 scatter plot between the Mean Fare Amount and the Passenger Count
 Below is a scatter plot that visualizes the relationship between the mean fare amount and the passenger count.The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.
 
 ```{r}
@@ -302,7 +302,7 @@ ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
 ```
 
 
-#Plot 15 Scatterplot of Trip Time and Total Amount
+# Plot 15 Scatterplot of Trip Time and Total Amount
 The plot visualizes the relationship between trip duration and total amount charged for taxi trips.The plot serves as a useful visualization for exploring the relationship between trip duration and total amount charged, potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
 
 ```{r}
