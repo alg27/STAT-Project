@@ -217,7 +217,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 ```
 
 
-# Plot 10  Daily Total Fare Amount
+# Plot 10 Daily Total Fare Amount
 A time series plot of daily total fare amounts can highlight trends, including days of high or low earnings, and the impact of specific events or holidays.
 
 ```{r, echo = FALSE}
@@ -283,7 +283,7 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
 ```
 
 
-# Plot 14 scatter plot between the Mean Fare Amount and the Passenger Count
+# Plot 14 Scatter plot between the Mean Fare Amount and the Passenger Count
 Below is a scatter plot that visualizes the relationship between the mean fare amount and the passenger count.The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.
 
 ```{r}
