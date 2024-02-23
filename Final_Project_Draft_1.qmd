@@ -268,10 +268,7 @@ summary(linear_model)
 ```
 
 <<<<<<< HEAD
-```{r}
-=======
 ```{r, echo = FALSE}
->>>>>>> be70e4f2b6dbe3ba64171fe8caf185f77956088d
 yhat = fitted(linear_model)
 ehat = residuals(linear_model)
 
@@ -281,9 +278,6 @@ abline(h=0)
 
 <<<<<<< HEAD
 ```{r}
-=======
-```{r, echo = FALSE}
->>>>>>> be70e4f2b6dbe3ba64171fe8caf185f77956088d
 rhat = rstandard(linear_model)
 qqnorm(rhat)
 qqline(rhat)
