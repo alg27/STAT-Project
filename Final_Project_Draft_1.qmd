@@ -24,7 +24,7 @@ options(bitmapType='cairo')
 x11(type='cairo')
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(lubridate)
 library(dplyr)
 library(ggplot2)
@@ -32,7 +32,7 @@ library(ggplot2)
 
 #Data cleaning
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 
 #Filters out all values based on some conditions
@@ -82,7 +82,7 @@ df <- df[sampled_indices, ]
 
 # Plot 1 Trip Distance vs Fare Amount
 
-For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well.
+For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount. 
 
 ```{r, echo = FALSE}
 # Scatter plot of Trip Distance vs. Fare Amount
@@ -136,7 +136,7 @@ pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages)
 
 # Plot 5 Density of Pick up and Drop off location
 
-Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc.
+Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the dropoff locations.
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -254,10 +254,18 @@ ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
 This plot will show the distribution of trip distances, faceted by the number of passengers in the taxi. This can reveal differences in trip distances depending on whether passengers are traveling alone or in a group.
 
 ```{r, echo = FALSE}
-ggplot(df, aes(x = trip_distance)) +
+#histogram df for passenger count greater than or equal to 3
+hist_df <- df %>%
+  mutate(grouped_passenger_count = case_when(
+    passenger_count %in% 1:2 ~ as.character(passenger_count),
+    passenger_count >= 3 ~ '3-6'
+  ))
+
+# Plot with ggplot2 using the new column for faceting
+ggplot(hist_df, aes(x = trip_distance)) +
   geom_histogram(bins = 30, fill = 'lightgreen', color = 'black') +
-  facet_wrap(~passenger_count, scales = 'free_x') +
-  labs(title = "Histogram of Trip Distance by Passenger Count",
+  facet_wrap(~grouped_passenger_count, scales = 'free_x') +
+  labs(title = "Histogram of Trip Distance by Grouped Passenger Count",
        x = "Trip Distance (miles)",
        y = "Count") +
   theme_minimal()
