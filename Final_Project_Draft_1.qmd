@@ -1,11 +1,9 @@
 ---
 title: "The Pulse of the City: Unveiling NYC Taxi Patterns - Group 13 Final Project"
 author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
-date: '2/15/2024'
+date: '2/22/2024'
 format:
   pdf: default
-  html: default
-pdf-engine: pdflatex
 editor: visual
 fontsize: 10pt
 geometry: margin=1in
@@ -26,7 +24,7 @@ options(bitmapType='cairo')
 x11(type='cairo')
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(lubridate)
 library(dplyr)
 library(ggplot2)
@@ -34,7 +32,7 @@ library(ggplot2)
 
 #Data cleaning
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 
 #Filters out all values based on some conditions
@@ -75,16 +73,23 @@ df <- df %>%
   )
 ```
 
+```{r, echo = FALSE}
+sampled_indices <- sample(nrow(df), size = 100000)
+
+# Subset the DataFrame with the sampled indices
+df <- df[sampled_indices, ]
+```
+
 # Plot 1 Trip Distance vs Fare Amount
 
-For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well.
+For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.
 
 ```{r, echo = FALSE}
 # Scatter plot of Trip Distance vs. Fare Amount
 trip_distance <- df$trip_distance
 fare_amount <- df$fare_amount
 plot(trip_distance, fare_amount, 
-     sub = "Trip Distance vs. Fare Amount",
+     main = "Trip Distance vs. Fare Amount",
      xlab = "Trip Distance", 
      ylab = "Fare Amount")
 ```
@@ -96,7 +101,7 @@ This plot shows the distribution of trip times for all of the rides. We can see 
 ```{r, echo = FALSE}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
-hist(trip_time,
+hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")
 ```
 
@@ -106,24 +111,32 @@ This plot shows the average speed of the taxi driver over their trip. We can see
 
 ```{r, echo = FALSE}
 # Box plot of speed
-boxplot(df$speed, ylab = "speed")
+boxplot(df$speed, ylab = "Speed")
 ```
 
 # Plot 4 Pie Chart of Payment Method
 
-This pllot shows the different payment methods that customers used for the taxi. We can see that the majority of people (\~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment.
+This plot shows the different payment methods that customers used for the taxi. We can see that the majority of people (\~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment.
 
 ```{r, echo = FALSE}
+library(scales)
+
 # Pie Chart of payment methods
 df_grouped_payments <- df %>% group_by(df$payment_type) %>% summarise(payment_total = sum(payment_type))
 df_grouped_payments <- df_grouped_payments %>% filter(row_number() <= n()-1)
 labels <- c("Credit Card","Cash","No Charge","Dispute")
-pie(df_grouped_payments$payment_total, labels = labels, main = "How the Passengers Paid for the Trip")
+
+# Calculate percentages
+percentages <- percent(df_grouped_payments$payment_total / sum(df_grouped_payments$payment_total))
+
+# Create pie chart
+pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages),col = c("coral", "cornflowerblue", "chartreuse3", "red"), main = "How the Passengers Paid for the Trip")
+
 ```
 
-#Plot 5 Density of Pick up and Drop off location
+# Plot 5 Density of Pick up and Drop off location
 
-Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc.
+Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the dropoff locations.
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -137,6 +150,7 @@ lines(density(df$PULocationID),
       col = "red", 
       lwd = 2)
 par(new = TRUE)
+<<<<<<< HEAD
 plot(density(df$DOLocationID), 
      main = "", 
      xlab = "", 
@@ -148,6 +162,10 @@ lines(density(df$DOLocationID),
       lwd = 2)
 
 
+=======
+plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04), col = "blue")
+lines(density(df$DOLocationID), col = "blue", lwd = 2)
+>>>>>>> 94bbedc3cae26aa8111e4b82738d4ebd2c75bc21
 ```
 
 # Plot 6 Line Graph of Number of Rides Per Day
@@ -169,34 +187,35 @@ plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = 
 
 ```
 
+```{r, echo = FALSE}
+library(ggplot2)
+```
+
 # Plot 7 Relationship Between Tip and Total Amount
 
 Displayed below is the relationship between tip amounts and total amounts from the dataset. This is usefule because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
 
 ```{r, echo = FALSE}
-library(ggplot2)
 ggplot(df, aes(x = tip_amount, y = total_amount)) +
   geom_point(color = "purple") +
   labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", 
        x = "Tip Amount ($)", 
        y = "Total Amount ($)") + 
   theme_minimal()
-
 ```
 
 # Plot 8 Heat Map of Taxi Pickups by Day of Week and Hour
+
 A heatmap can illustrate the concentration of taxi pickups across different times of the day and days of the week. This visualization helps identify peak taxi usage periods.
 
 ```{r, echo = FALSE}
 # Convert pickup_time to day of the week and hour
 df$pickup_day <- weekdays(df$pickup_time)
 df$pickup_hour <- hour(df$pickup_time)
-
 # Aggregate data for heatmap
 pickup_heatmap_data <- df %>%
   group_by(pickup_day, pickup_hour) %>%
   summarise(Count = n(), .groups = 'drop')
-
 ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) +
   geom_tile() +
   scale_fill_gradient(low = "lightblue", high = "darkblue") +
@@ -205,27 +224,29 @@ ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) 
 ```
 
 # Plot 9 Number of Rides by Passenger Count
+
 A bar chart can show the distribution of rides by the number of passengers, providing insight into common travel group sizes.
+
 ```{r, echo = FALSE}
 # Aggregate data by passenger count
 passenger_count_data <- df %>%
   group_by(passenger_count) %>%
   summarise(Rides = n(), .groups = 'drop')
-
 ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
   geom_bar(stat = "identity", fill = "orange") +
   labs(title = "Number of Rides by Passenger Count", x = "Passenger Count", y = "Number of Rides") +
   theme_minimal()
 ```
 
-# Plot 10  Daily Total Fare Amount
+# Plot 10 Daily Total Fare Amount
+
 A time series plot of daily total fare amounts can highlight trends, including days of high or low earnings, and the impact of specific events or holidays.
+
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
 daily_fare_data <- df %>%
   group_by(day) %>%
   summarise(TotalFare = sum(fare_amount), .groups = 'drop')
-
 ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
   geom_line(color = "darkred") +
   labs(title = "Daily Total Fare Amount", x = "Date", y = "Total Fare Amount ($)") +
@@ -233,15 +254,9 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
 ```
 
 # Plot 11 Violin Plot of Fare Amount by Rate Code
-A violin plot can be useful to compare the distribution of fare amounts across different rate codes. 
-Rate Code IDs:
-1. Standard rate 
-2. JFK 
-3. Newark 
-4. Nassau or Westchester 
-5. Negotiated fare 
-6. Group ride 
-99. Unknown
+
+A violin plot can be useful to compare the distribution of fare amounts across different rate codes. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
+
 ```{r, echo = FALSE}
 ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
   geom_violin(trim = FALSE, fill = 'skyblue', color = 'blue', alpha = 0.7) +
@@ -257,16 +272,45 @@ ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
 ```
 
 # Plot 12 Faceted Histogram of Trip Distance by Passenger Count
+
 This plot will show the distribution of trip distances, faceted by the number of passengers in the taxi. This can reveal differences in trip distances depending on whether passengers are traveling alone or in a group.
 
 ```{r, echo = FALSE}
-ggplot(df, aes(x = trip_distance)) +
+#histogram df for passenger count greater than or equal to 3
+hist_df <- df %>%
+  mutate(grouped_passenger_count = case_when(
+    passenger_count %in% 1:2 ~ as.character(passenger_count),
+    passenger_count >= 3 ~ '3-6'
+  ))
+
+# Plot with ggplot2 using the new column for faceting
+ggplot(hist_df, aes(x = trip_distance)) +
   geom_histogram(bins = 30, fill = 'lightgreen', color = 'black') +
-  facet_wrap(~passenger_count, scales = 'free_x') +
-  labs(title = "Histogram of Trip Distance by Passenger Count",
+  facet_wrap(~grouped_passenger_count, scales = 'free_x') +
+  labs(title = "Histogram of Trip Distance by Grouped Passenger Count",
        x = "Trip Distance (miles)",
        y = "Count") +
   theme_minimal()
+```
+
+# Plot 13 Scatterplot of Tip Amounts and Total Amounts
+
+Displayed below is the relationship between tip amounts and total amounts from the dataset. This is useful because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
+
+```{r}
+ggplot(df, aes(x = tip_amount, y = total_amount)) +
+  geom_point(color = "purple") +
+  labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", x = "Tip Amount ($)", y = "Total Amount ($)")
+```
+
+# Plot 14 Scatterplot of Trip Time and Total Amount
+
+The plot visualizes the relationship between trip duration and total amount charged for taxi trips.The plot serves as a useful visualization for exploring the relationship between trip duration and total amount charged, potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = trip_time, y = total_amount)) +
+  geom_point(color = "deepskyblue3") +
+  labs(title = "Total Amount Over Trip Duration", x = "Trip Duration", y = "Total Amount ($)")
 ```
 
 # Statistical Modeling
@@ -276,7 +320,6 @@ We can see a strong positive correlation between the trip distance and fare amou
 ```{r, echo = FALSE}
 x <- df$trip_distance
 y <- df$fare_amount
-
 linear_model <- lm(y ~ x)
 summary(linear_model)
 ```
@@ -284,7 +327,6 @@ summary(linear_model)
 ```{r, echo = FALSE}
 yhat = fitted(linear_model)
 ehat = residuals(linear_model)
-
 plot(yhat, ehat)
 abline(h=0)
 ```
