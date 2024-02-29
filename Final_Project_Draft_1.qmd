@@ -82,7 +82,7 @@ df <- df[sampled_indices, ]
 
 # Plot 1 Trip Distance vs Fare Amount
 
-For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount. 
+For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.
 
 ```{r, echo = FALSE}
 # Scatter plot of Trip Distance vs. Fare Amount
@@ -218,6 +218,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 ```
 
 # Plot 10 Daily Total Fare Amount
+
 A time series plot of daily total fare amounts can highlight trends, including days of high or low earnings, and the impact of specific events or holidays.
 
 ```{r, echo = FALSE}
@@ -271,8 +272,7 @@ ggplot(hist_df, aes(x = trip_distance)) +
   theme_minimal()
 ```
 
-
-# Plot 13 Scatterplot of Tip Amounts and Total Amounts 
+# Plot 13 Scatterplot of Tip Amounts and Total Amounts
 
 Displayed below is the relationship between tip amounts and total amounts from the dataset. This is useful because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
 
@@ -281,7 +281,6 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
   geom_point(color = "purple") +
   labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", x = "Tip Amount ($)", y = "Total Amount ($)")
 ```
-
 
 # Plot 14 Scatterplot of Trip Time and Total Amount
 
