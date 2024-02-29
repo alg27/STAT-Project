@@ -1,7 +1,7 @@
 ---
 title: "The Pulse of the City: Unveiling NYC Taxi Patterns - Group 13 Final Project"
 author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
-date: '2/22/2024'
+date: '2/29/2024'
 format:
   pdf: default
 editor: visual
