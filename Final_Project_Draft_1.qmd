@@ -315,3 +315,18 @@ rhat = rstandard(linear_model)
 qqnorm(rhat)
 qqline(rhat)
 ```
+#Plot 15
+Below is a scatter plot that visualizes the relationship between the mean fare amount and the passenger count.The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.
+
+```{r}
+# Calculate the mean fare amount for each count of passengers
+mean_fare <- df %>%
+  group_by(passenger_count) %>%
+  summarize(mean_fare_amount = mean(fare_amount))
+# Scatter plot of mean fare amount vs. passenger count
+ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
+  geom_point(color = "darkslateblue") +
+  geom_text(aes(label = round(mean_fare_amount, 2)), vjust = -0.5, color = "darkseagreen4") +
+  labs(title = "Mean Fare Amount vs. Passenger Count", x = "Passenger Count", y = "Mean Fare Amount ($)") +
+  scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
+```
