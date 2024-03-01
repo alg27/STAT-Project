@@ -19,7 +19,7 @@ Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 t
 
 # Plots
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 options(bitmapType='cairo')
 x11(type='cairo')
 ```
@@ -143,6 +143,10 @@ lines(density(df$PULocationID),
 par(new = TRUE)
 plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04), col = "blue")
 lines(density(df$DOLocationID), col = "blue", lwd = 2)
+legend("topright", # Position of the legend within the plot area
+       legend = c("Pickup Location", "Dropoff Location"), # Text for the legend
+       col = c("red", "blue"), # Colors for the legend keys
+       lwd = 2) # Line width for the legend keys
 ```
 
 # Plot 5 Line Graph of Number of Rides Per Day
@@ -181,7 +185,32 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
   theme_minimal()
 ```
 
-# Plot 7 Heat Map of Taxi Pickups by Day of Week and Hour
+#Plot 7 Tip amounts during different times of day
+
+Below is a plot showing the average tip amounts during different times of day (based on dropoff time). Late night is between 12:00am and 4:00am. Early morning is between 4:00am and 8:00am. Morning to midday is between 8:00am and 12:00pm. Afternooon is between 12:00pm and 4:00pm. Evening rush is between 4:00pm and 8:00pm, and night is between 8:00pm and 12:00am. This plot reveals that people seem to tip a lot more in the evening rush and night time. 
+
+```{r}
+df$tpep_dropoff_datetime <- as.POSIXct(df$tpep_dropoff_datetime, format="%m/%d/%Y %I:%M:%S %p")
+df$time_of_day <- cut(hour(df$tpep_dropoff_datetime),
+                      breaks=c(-Inf, 4, 8, 12, 16, 20, 24),
+                      labels=c("Late Night", "Early Morning", "Morning to Midday", "Afternoon", "Evening Rush", "Night"),
+                      right=FALSE)
+average_tips <- df %>%
+  group_by(time_of_day) %>%
+  summarise(average_tip = mean(tip_amount, na.rm = TRUE))
+
+ggplot(average_tips, aes(x=time_of_day, y=average_tip, fill=time_of_day)) +
+  geom_col() +
+  labs(title="Average Tip Amount by Time of Day",
+       x="Time of Day", y="Average Tip Amount") +
+  theme_minimal() +
+  scale_fill_brewer(palette="Pastel1") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) # 
+```
+
+
+
+# Plot 8 Heat Map of Taxi Pickups by Day of Week and Hour
 
 A heatmap can illustrate the concentration of taxi pickups across different times of the day and days of the week. This visualization helps identify peak taxi usage periods.
 
@@ -200,7 +229,7 @@ ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) 
   theme_minimal()
 ```
 
-# Plot 8 Number of Rides by Passenger Count
+# Plot 9 Number of Rides by Passenger Count
 
 A bar chart can show the distribution of rides by the number of passengers, providing insight into common travel group sizes.
 
@@ -215,7 +244,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
   theme_minimal()
 ```
 
-# Plot 9 Daily Total Fare Amount
+# Plot 10 Daily Total Fare Amount
 
 A time series plot of daily total fare amounts can highlight trends, including days of high or low earnings, and the impact of specific events or holidays.
 
@@ -230,7 +259,7 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
   theme_minimal()
 ```
 
-# Plot 10 Violin Plot of Fare Amount by Rate Code
+# Plot 11 Violin Plot of Fare Amount by Rate Code
 
 A violin plot can be useful to compare the distribution of fare amounts across different rate codes. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
 
@@ -238,7 +267,7 @@ A violin plot can be useful to compare the distribution of fare amounts across d
 ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
   geom_violin(trim = FALSE, fill = 'skyblue', color = 'blue', alpha = 0.7) +
   stat_summary(fun = median, geom = "point", shape = 23, size = 3, color = "darkred", fill = "yellow") +
-  stat_summary(fun = median, 
+  stat_summary(fun = median, hjust = 1.3, 
                geom = "text", 
                aes(label = round(after_stat(y), 2)), 
                vjust = -1, color = "darkgreen") +
@@ -248,7 +277,7 @@ ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
   theme_minimal()
 ```
 
-# Plot 11 Scatterplot of Trip Time and Total Amount
+# Plot 12 Scatterplot of Trip Time and Total Amount
 
 The plot visualizes the relationship between trip duration and total amount charged for taxi trips.The plot serves as a useful visualization for exploring the relationship between trip duration and total amount charged, potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
 
@@ -257,7 +286,9 @@ ggplot(df, aes(x = trip_time, y = total_amount)) +
   geom_point(color = "deepskyblue3") +
   labs(title = "Total Amount Over Trip Duration", x = "Trip Duration", y = "Total Amount ($)")
 ```
-#Plot 12
+
+#Plot 13 Scatter plot between mean fare amount and passenger count 
+
 Below is a scatter plot that visualizes the relationship between the mean fare amount and the passenger count.The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.
 
 ```{r}
@@ -272,9 +303,11 @@ ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
   labs(title = "Mean Fare Amount vs. Passenger Count", x = "Passenger Count", y = "Mean Fare Amount ($)") +
   scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
 ```
+
+
 # Statistical Modeling
 
-We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot seems gaussian, revealing linearity.
+We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot does not look gaussian, as the upper and lower theoretical quantiles do not follow the sample quantiles. 
 
 ```{r, echo = FALSE}
 x <- df$trip_distance
@@ -295,4 +328,3 @@ rhat = rstandard(linear_model)
 qqnorm(rhat)
 qqline(rhat)
 ```
-
