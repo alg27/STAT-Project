@@ -242,7 +242,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 
 Below is a time series plot using ggplot2 to visualize the daily total fare amounts. It first aggregates the data by day, calculating the sum of fare amounts for each day. The resulting plot depicts the trend in total fare amounts over time, with dates on the x-axis and total fare amounts on the y-axis.This visualization is valuable for discerning patterns, trends, and potential correlations with external events or holidays, offering insights into the overall performance of a transportation system.
 
-We were curious as to why the total fare amount dropped around Feb 1st. We did some searching and learned that a winter storm hit during that time, causing many people to stay indoors. This is why we see a dip around that time. 
+We were curious as to why the total fare amount dropped around Feb 1st. We did some searching and learned that a winter storm hit during that time, causing many people to stay indoors. This is why we see a dip around that time.
 
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
@@ -376,4 +376,3 @@ rhat = rstandard(model)
 qqnorm(rhat)
 qqline(rhat)
 ```
-
