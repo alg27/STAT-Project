@@ -74,6 +74,7 @@ df <- df %>%
 ```
 
 ```{r, echo = FALSE}
+set.seed(1)
 sampled_indices <- sample(nrow(df), size = 100000)
 
 # Subset the DataFrame with the sampled indices
@@ -128,6 +129,8 @@ pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages)
 # Plot 4 Density of Pick up and Drop off location
 
 Below is a density plot with overlaid lines for both pick-up and drop-off locations, making it easy to compare their distributions. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the drop off locations.The density plot provides a visual representation of spatial patterns, offering actionable insights for businesses, city planners, and transportation services to make informed decisions and optimize their operations.
+
+We were wondering what these humps came from, and we figured out that those areas are airports/other high areas of interest.
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -239,6 +242,8 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 
 Below is a time series plot using ggplot2 to visualize the daily total fare amounts. It first aggregates the data by day, calculating the sum of fare amounts for each day. The resulting plot depicts the trend in total fare amounts over time, with dates on the x-axis and total fare amounts on the y-axis.This visualization is valuable for discerning patterns, trends, and potential correlations with external events or holidays, offering insights into the overall performance of a transportation system.
 
+We were curious as to why the total fare amount dropped around Feb 1st. We did some searching and learned that a winter storm hit during that time, causing many people to stay indoors. This is why we see a dip around that time. 
+
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
 daily_fare_data <- df %>%
@@ -253,6 +258,8 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
 # Plot 11 Violin Plot of Fare Amount by Rate Code
 
 Below is a violin plot used to visually compare fare distributions across different rate codes. This plot is essential for identifying patterns, outliers, and skewness in fare amounts. The inclusion of median points and labels highlights central tendencies within each rate code. Beyond analysis, the plot serves as a clear communication tool, aiding stakeholders in making informed decisions related to pricing strategies and operational planning based on observed fare variations. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
+
+We were curious to know why the rate code had such a wide range. Through our research, we found out that Nassau/Westchester's populations were much more wealthy, explaining why some of the fare amounts were so much higher.
 
 ```{r, echo = FALSE}
 ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
@@ -302,45 +309,71 @@ We can see a strong positive correlation between the trip distance and fare amou
 ```{r, echo = FALSE}
 x <- df$trip_distance
 y <- df$fare_amount
-linear_model <- lm(y ~ x)
-summary(linear_model)
+
+model <- lm(y ~ x)
+
+# Extract coefficients and related statistics
+coefficients <- coef(model)
+standard_errors <- summary(model)$coefficients[, "Std. Error"]
+t_values <- coefficients / standard_errors
+p_values <- 2 * pt(abs(t_values), df = df.residual(model), lower.tail = FALSE)
+
+# Extract additional statistics from the model object
+residuals <- summary(model)$residuals
+r_squared <- summary(model)$r.squared
+adj_r_squared <- summary(model)$adj.r.squared
+f_value <- summary(model)$fstatistic[1]
+f_p_value <- summary(model)$fstatistic[2]
+aic <- AIC(model)
+bic <- BIC(model)
+
+# Create a data frame to organize all the information
+summary_data <- data.frame(
+  coefficient = coefficients,
+  std_error = standard_errors,
+  t_value = t_values,
+  p_value = p_values
+)
+
+# Additional statistics
+summary_stats <- data.frame(
+  r_squared = r_squared,
+  adj_r_squared = adj_r_squared,
+  f_value = f_value,
+  f_p_value = f_p_value,
+  aic = aic,
+  bic = bic
+)
+
+quartiles <- quantile(residuals, probs = c(0.25, 0.5, 0.75))
+
+# Residual statistics
+summary_residuals <- data.frame(
+  mean = mean(residuals),
+  sd = sd(residuals),
+  min = min(residuals),
+  Q1 = quartiles[1],
+  median = median(residuals),
+  Q3 = quartiles[3],
+  max = max(residuals)
+)
+rownames(summary_residuals) <- "Data"
+
+print(summary_residuals)
+print(summary_data)
+print(summary_stats)
 ```
 
 ```{r, echo = FALSE}
-yhat = fitted(linear_model)
-ehat = residuals(linear_model)
+yhat = fitted(model)
+ehat = residuals(model)
 plot(yhat, ehat)
 abline(h=0)
 ```
 
 ```{r, echo = FALSE}
-rhat = rstandard(linear_model)
+rhat = rstandard(model)
 qqnorm(rhat)
 qqline(rhat)
 ```
 
-# Advanced Questions
-
-Below are a few questions that we have answered and believe are crucial insights that we discovered throughout are work, data wrangling and plot making. 
-
-# Question 1: Outlier Explanation
-
-What factors contribute to the decline in ridership observed in late January?
-
-In January, there was a winter storm in New York that shut everything down. This caused a lot of people to stay in doors.
-
-# Question 2: Effect of Pickup and Dropoff Locations on Fare
-
-How do the pickup and dropoff locations (PULocationID and DOLocationID) affect the fare amount (fare_amount)? 
-
-```{r}
-
-```
-
-# Question 3: Patterns in Taxi Usage Over Time
-
-How does taxi usage, in terms of number of trips and total amount charged (total_amount), vary over different times of the day and days of the week?
-
-```{r}
-
-```
