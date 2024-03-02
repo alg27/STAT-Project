@@ -82,7 +82,7 @@ df <- df[sampled_indices, ]
 
 # Plot 1 Trip Distance vs Fare Amount
 
-For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.
+For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare using a scatterplot. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.This suggests that there is a positive correlation between trip distance and fare amount. In other words, longer trips tend to result in higher fare amounts. The scatter plot provides a quick and intuitive way to observe the trend and relationship between these two variables.
 
 ```{r, echo = FALSE}
 # Scatter plot of Trip Distance vs. Fare Amount
@@ -96,7 +96,7 @@ plot(trip_distance, fare_amount,
 
 # Plot 2 Histogram of Trip Time
 
-This plot shows the distribution of trip times for all of the rides. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. This data is right skewed, which makes sense considering that people usually hail a taxi to go a few miles.
+This plot visualizes the distribution of trip times for rides, focusing on those with a duration of less than 100 minutes. The resulting histogram provides insights into the frequency or count of rides across different trip time intervals. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. The data shows a right-skewed distribution suggesting that most rides have relatively short durations (between 5 and 10 minutes), with fewer rides taking longer durations. This aligns with the common expectation that taxi rides are typically short-distance travels. The truncation at 100 minutes implies a focus on the majority of rides, excluding potential outliers with very long durations.
 
 ```{r, echo = FALSE}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
@@ -107,7 +107,7 @@ hist(trip_time,main = "Histogram of Trip Time",
 
 # Plot 3 Pie Chart of Payment Method
 
-This plot shows the different payment methods that customers used for the taxi. We can see that the majority of people (\~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment.
+The pie chart is visualizing the proportion of different payment methods used by taxi passengers.The colors, labels, and percentages provide information about the distribution We can see that the majority of people (\\\~60%) paid for their trip with card with nearly the rest paying in cash. Very little people had no charge or disputed the payment.This kind of visualization can be valuable for understanding customer behavior, informing business decisions, and communicating insights to stakeholders.
 
 ```{r, echo = FALSE}
 library(scales)
@@ -127,7 +127,7 @@ pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages)
 
 # Plot 4 Density of Pick up and Drop off location
 
-Below is the density plot of where most of the pick up and drop off locations are. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the dropoff locations.
+Below is a density plot with overlaid lines for both pick-up and drop-off locations, making it easy to compare their distributions. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the drop off locations.The density plot provides a visual representation of spatial patterns, offering actionable insights for businesses, city planners, and transportation services to make informed decisions and optimize their operations.
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -144,7 +144,7 @@ legend("topright", # Position of the legend within the plot area
 
 # Plot 5 Line Graph of Number of Rides Per Day
 
-This plot shows the total number of rides per day between Jan and Mar. We can see that there is a consistent dip in the number of rides around every 6 days, mostly on Sunday's, implying that people stay at home or don't travel as much on the weekends in New York.
+This plot shows the total number of rides per day between Jan and Mar. The purpose of this code is to visualize the trend in the number of taxi rides per day in New York City between January and March. We have observed a consistent dip in the number of rides around every 6 days, especially on Sundays, suggesting a pattern of reduced taxi usage on weekends. This implies that people tend to stay at home or travel less on Sundays in New York during the specified time period.
 
 ```{r, echo = FALSE}
 # Line chart of month and number of taxi trips
@@ -167,7 +167,7 @@ library(ggplot2)
 
 # Plot 6 Relationship Between Tip and Total Amount
 
-Displayed below is the relationship between tip amounts and total amounts from the dataset. This is usefule because we are able to see if there's a correlation between the tip amount and the total amount of a transaction.
+Displayed below is the relationship between tip amounts and total amounts from the dataset. The x-axis represents the tip amounts, and the y-axis represents the total amounts. We can observe a positive correlation corroborating an intuitive relationship that is represented between the total amount of the fare and the tip given.
 
 ```{r, echo = FALSE}
 ggplot(df, aes(x = tip_amount, y = total_amount)) +
@@ -180,7 +180,7 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
 
 #Plot 7 Tip amounts during different times of day
 
-Below is a plot showing the average tip amounts during different times of day (based on dropoff time). Late night is between 12:00am and 4:00am. Early morning is between 4:00am and 8:00am. Morning to midday is between 8:00am and 12:00pm. Afternooon is between 12:00pm and 4:00pm. Evening rush is between 4:00pm and 8:00pm, and night is between 8:00pm and 12:00am. This plot reveals that people seem to tip a lot more in the evening rush and night time.
+Below is a bar plot reveals average tip amounts during different times of the day (based on dropoff time). Late night is between 12:00am and 4:00am. Early morning is between 4:00am and 8:00am. Morning to midday is between 8:00am and 12:00pm. Afternoon is between 12:00pm and 4:00pm. Evening rush is between 4:00pm and 8:00pm, and night is between 8:00pm and 12:00am. The plot illustrates that people tend to tip more generously in the evening rush and nighttime periods. The visualization is aesthetically presented with minimal styling and a Pastel1 color palette. Overall, the code and resulting visualization offer valuable insights into the variation of average tip amounts across different time intervals based on taxi drop off times.
 
 ```{r}
 df$tpep_dropoff_datetime <- as.POSIXct(df$tpep_dropoff_datetime, format="%m/%d/%Y %I:%M:%S %p")
@@ -203,7 +203,7 @@ ggplot(average_tips, aes(x=time_of_day, y=average_tip, fill=time_of_day)) +
 
 # Plot 8 Heat Map of Taxi Pickups by Day of Week and Hour
 
-A heatmap can illustrate the concentration of taxi pickups across different times of the day and days of the week. This visualization helps identify peak taxi usage periods.
+Below is a heatmap that can illustrate the concentration of taxi pickups across different times of the day and days of the week. The resulting plot helps in identifying patterns and peak usage periods for taxi services. It can be utilized by taxi service providers for operational optimization, service planning, and targeted marketing based on observed patterns in pickup data.
 
 ```{r, echo = FALSE}
 # Convert pickup_time to day of the week and hour
@@ -222,7 +222,7 @@ ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) 
 
 # Plot 9 Number of Rides by Passenger Count
 
-A bar chart can show the distribution of rides by the number of passengers, providing insight into common travel group sizes.
+Below is a bar chart, illustrating the distribution of rides based on the number of passengers, offering insights into common group sizes for travel. Understanding passenger patterns aids in the development of targeted marketing strategies, optimizing user experience, and shaping business policies. Lastly, it offers a data-driven approach to enhance overall service efficiency, resource allocation, and user satisfaction within the transportation industry.
 
 ```{r, echo = FALSE}
 # Aggregate data by passenger count
@@ -237,7 +237,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 
 # Plot 10 Daily Total Fare Amount
 
-A time series plot of daily total fare amounts can highlight trends, including days of high or low earnings, and the impact of specific events or holidays.
+Below is a time series plot using ggplot2 to visualize the daily total fare amounts. It first aggregates the data by day, calculating the sum of fare amounts for each day. The resulting plot depicts the trend in total fare amounts over time, with dates on the x-axis and total fare amounts on the y-axis.This visualization is valuable for discerning patterns, trends, and potential correlations with external events or holidays, offering insights into the overall performance of a transportation system.
 
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
@@ -252,7 +252,7 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
 
 # Plot 11 Violin Plot of Fare Amount by Rate Code
 
-A violin plot can be useful to compare the distribution of fare amounts across different rate codes. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
+Below is a violin plot used to visually compare fare distributions across different rate codes. This plot is essential for identifying patterns, outliers, and skewness in fare amounts. The inclusion of median points and labels highlights central tendencies within each rate code. Beyond analysis, the plot serves as a clear communication tool, aiding stakeholders in making informed decisions related to pricing strategies and operational planning based on observed fare variations. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
 
 ```{r, echo = FALSE}
 ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
@@ -270,7 +270,7 @@ ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
 
 # Plot 12 Scatterplot of Trip Time and Total Amount
 
-The plot visualizes the relationship between trip duration and total amount charged for taxi trips.The plot serves as a useful visualization for exploring the relationship between trip duration and total amount charged, potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
+Below is a scatterplot that is depicting the relationship between taxi trip duration and total amount charged. Each point on the plot represents a specific trip, with the x-coordinate indicating the duration and the y-coordinate showing the total amount charged. The use of blue color enhances visibility. Analyzing the plot can reveal insights into how total charges vary with trip duration, identifying patterns or outliers in the dataset. This visualization is valuable for exploring underlying patterns in taxi trip data and potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
 
 ```{r, echo = FALSE}
 ggplot(df, aes(x = trip_time, y = total_amount)) +
@@ -280,7 +280,7 @@ ggplot(df, aes(x = trip_time, y = total_amount)) +
 
 #Plot 13 Scatter plot between mean fare amount and passenger count
 
-Below is a scatter plot that visualizes the relationship between the mean fare amount and the passenger count.The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.
+The scatter plot below visually represents the relationship between mean fare amounts and the number of passengers in taxi trips. The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.By analyzing trends and patterns, this visualization aids in understanding how pricing varies with passenger count. The importance lies in its potential impact on decision-making within the taxi industry, influencing pricing strategies, resource allocation, and overall operational efficiency. Additionally, insights from this analysis can contribute to enhancing customer experience and informing policy and regulation decisions, making it a valuable tool for stakeholders and policymakers alike.
 
 ```{r}
 # Calculate the mean fare amount for each count of passengers
@@ -317,4 +317,30 @@ abline(h=0)
 rhat = rstandard(linear_model)
 qqnorm(rhat)
 qqline(rhat)
+```
+
+# Advanced Questions
+
+Below are a few questions that we have answered and believe are crucial insights that we discovered throughout are work, data wrangling and plot making. 
+
+# Question 1: Outlier Explanation
+
+What factors contribute to the decline in ridership observed in late January?
+
+In January, there was a winter storm in New York that shut everything down. This caused a lot of people to stay in doors.
+
+# Question 2: Effect of Pickup and Dropoff Locations on Fare
+
+How do the pickup and dropoff locations (PULocationID and DOLocationID) affect the fare amount (fare_amount)? 
+
+```{r}
+
+```
+
+# Question 3: Patterns in Taxi Usage Over Time
+
+How does taxi usage, in terms of number of trips and total amount charged (total_amount), vary over different times of the day and days of the week?
+
+```{r}
+
 ```
