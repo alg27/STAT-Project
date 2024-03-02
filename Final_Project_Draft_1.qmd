@@ -334,7 +334,6 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
 ```
 
 # Plot 9 Relationship Between Tip and Total Amount
-
 Displayed below is the relationship between tip amounts and total amounts from the dataset. The x-axis represents the tip amounts, and the y-axis represents the total amounts. We can observe a positive correlation corroborating an intuitive relationship that is represented between the total amount of the fare and the tip given.
 
 ```{r, echo = FALSE}
@@ -486,6 +485,7 @@ outlier_explanation
 # Question 2: Effect of Pickup and Dropoff Locations on Fare
 
 How do the pickup and dropoff locations (PULocationID and DOLocationID) affect the fare amount (fare_amount)? 
+Below is a table that shows PULocationID and DOLocationID in relation to fare amount:
 
 ```{r, echo = FALSE}
 # Summarize the effect of pickup and dropoff locations on fare amount
@@ -537,5 +537,4 @@ new_data <- data.frame(trip_distance = c(3.5, 4.2, 2.8),
 predictions <- predict(price_prediction, newdata = new_data)
 predictions
 ```
-
 
