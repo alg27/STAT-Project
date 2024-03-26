@@ -31,11 +31,11 @@ library(ggplot2)
 library(RSQLite)
 ```
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-#Data cleaning
+#Do this part only once to make database
+
+```{r}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 
-#Filters out all values based on some conditions
 df <- df %>%
   mutate(
     pickup_time = ymd_hms(tpep_pickup_datetime),
@@ -72,11 +72,6 @@ df <- df %>%
     passenger_count > 0,
     RatecodeID < 100
   )
-```
-
-```{r}
-csvFilePath <- "jan_to_mar_taxi_2021.csv" # Update this path
-df <- read.csv(csvFilePath)
 
 # Create the table in SQLite database
 dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FALSE)
@@ -85,14 +80,12 @@ dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FAL
 ```{r}
 # Connect to the SQLite database
 dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
-dbListFields(dcon, "users")
 ```
+
 ```{r}
 query <- "SELECT * FROM users LIMIT 5"
 df <- dbGetQuery(dcon, query)
 ```
-
-
 
 ```{r}
 query <- "
