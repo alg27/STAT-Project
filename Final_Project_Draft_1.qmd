@@ -31,14 +31,34 @@ library(ggplot2)
 library(RSQLite)
 ```
 
+```{r}
+pickup_datetime <- "2021-01-01 00:30:10"
+pickup_datetime_parsed <- as.POSIXct(pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
+
+# Convert to the desired format "mm/dd/yyyy hh:mm:ss AM/PM"
+pickup_datetime_formatted <- format(pickup_datetime_parsed, "%m/%d/%Y %I:%M:%S %p")
+
+pickup_datetime_formatted
+```
+
 #Do this part only once to make database
 
 ```{r}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
+df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
+df$tpep_pickup_datetime_formatted <- format(df$tpep_pickup_datetime, "%m/%d/%Y %I:%M:%S %p")
+
+df <- df %>% select(-tpep_pickup_datetime)
+df <- df %>% rename(tpep_pickup_datetime = tpep_pickup_datetime_formatted)
+first_col_name <- names(df)[1]
+df <- df %>% select({{first_col_name}}, tpep_pickup_datetime, everything())
+
+df$tpep_dropoff_datetime <- as.POSIXct(df$tpep_dropoff_datetime, format = "%m/%d/%Y %I:%M:%S %p")
+df$tpep_dropoff_datetime <- format(df$tpep_dropoff_datetime, "%m/%d/%Y %I:%M:%S %p")
 
 df <- df %>%
   mutate(
-    pickup_time = ymd_hms(tpep_pickup_datetime),
+    pickup_time = mdy_hms(tpep_pickup_datetime),
     dropoff_time = mdy_hms(tpep_dropoff_datetime),
     trip_time = as.numeric(difftime(dropoff_time, pickup_time, units = "mins")),
     speed = trip_distance / (trip_time/ 60), # Speed in miles per hour
@@ -74,6 +94,7 @@ df <- df %>%
   )
 
 # Create the table in SQLite database
+dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FALSE)
 ```
 
@@ -83,45 +104,68 @@ dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 ```
 
 ```{r}
-query <- "SELECT * FROM users LIMIT 5"
-df <- dbGetQuery(dcon, query)
+#Disconnect DB (Don't use all the time)
+dbDisconnect(dcon)
+```
+
+
+```{r}
+dbListTables(dcon)
 ```
 
 ```{r}
+query <- "SELECT * FROM jan_to_mar_taxi_2021"
+df <- dbGetQuery(dcon, query)
+```
+
+
+```{r}
 query <- "
-SELECT *,
-       -- Calculating trip time in minutes
-       (julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24 * 60 AS trip_time,
-       -- Calculating speed in miles per hour
-       (trip_distance / ((julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24)) AS speed,
-       -- Calculating fare per mile with handling for division by zero
-       CASE
-         WHEN trip_distance > 0 THEN fare_amount / trip_distance
-         ELSE NULL
-       END AS fare_per_mile
-FROM users
+SELECT
+  *,
+  -- Assuming tpep_pickup_datetime and tpep_dropoff_datetime are in the format 'YYYY-MM-DD HH:MM:SS'
+  -- Calculating trip time in minutes
+  (julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24 * 60 AS trip_time,
+  -- Calculating speed in miles per hour
+  trip_distance / ((julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24) AS speed,
+  -- Calculating fare per mile with handling for division by zero
+  CASE
+    WHEN trip_distance > 0 THEN fare_amount / trip_distance
+    ELSE NULL
+  END AS fare_per_mile
+FROM
+  jan_to_mar_taxi_2021
 WHERE
-    strftime('%m', tpep_dropoff_datetime) < '04'
-    AND strftime('%Y', tpep_dropoff_datetime) = '2021'
-    AND (strftime('%H', tpep_dropoff_datetime) != '00' OR strftime('%M', tpep_dropoff_datetime) != '00' OR strftime('%S', tpep_dropoff_datetime) != '00')
-    AND (strftime('%H', tpep_pickup_datetime) != '00' OR strftime('%M', tpep_pickup_datetime) != '00' OR strftime('%S', tpep_pickup_datetime) != '00')
-    AND strftime('%Y', tpep_pickup_datetime) = '2021'
-    AND fare_per_mile < 50
-    AND speed <= 120
-    AND speed >= 0.15
-    AND fare_amount > 0
-    AND trip_time > (10 / 60)
-    AND trip_time < 600
-    AND extra >= 0
-    AND mta_tax >= 0
-    AND tip_amount >= 0
-    AND tolls_amount >= 0
-    AND improvement_surcharge >= 0
-    AND congestion_surcharge >= 0
-    AND total_amount >= 0
-    AND passenger_count < 20
-    AND passenger_count > 0
-    AND RatecodeID < 100
+  -- Filtering conditions
+  strftime('%m', tpep_dropoff_datetime) < '04'
+  AND strftime('%Y', tpep_dropoff_datetime) = '2021'
+  AND (
+    strftime('%H', tpep_dropoff_datetime) != '00'
+    OR strftime('%M', tpep_dropoff_datetime) != '00'
+    OR strftime('%S', tpep_dropoff_datetime) != '00'
+  )
+  AND (
+    strftime('%H', tpep_pickup_datetime) != '00'
+    OR strftime('%M', tpep_pickup_datetime) != '00'
+    OR strftime('%S', tpep_pickup_datetime) != '00'
+  )
+  AND strftime('%Y', tpep_pickup_datetime) = '2021'
+  AND trip_time > (10 / 60) -- Trip must be longer than 10 seconds
+  AND trip_time < 600
+  AND fare_per_mile < 50
+  AND speed <= 120
+  AND speed >= 0.15
+  AND fare_amount > 0
+  AND extra >= 0
+  AND mta_tax >= 0
+  AND tip_amount >= 0
+  AND tolls_amount >= 0
+  AND improvement_surcharge >= 0
+  AND congestion_surcharge >= 0
+  AND total_amount >= 0
+  AND passenger_count < 20
+  AND passenger_count > 0
+  AND RatecodeID < 100;
 "
 
 # Fetch the data
