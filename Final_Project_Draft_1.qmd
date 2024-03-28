@@ -31,7 +31,7 @@ library(ggplot2)
 library(RSQLite)
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 pickup_datetime <- "2021-01-01 00:30:10"
 pickup_datetime_parsed <- as.POSIXct(pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
 
@@ -41,9 +41,9 @@ pickup_datetime_formatted <- format(pickup_datetime_parsed, "%m/%d/%Y %I:%M:%S %
 pickup_datetime_formatted
 ```
 
-#Do this part only once to make database
+#Make database
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 df <- read.csv("jan_to_mar_taxi_2021.csv")
 df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
 df$tpep_pickup_datetime_formatted <- format(df$tpep_pickup_datetime, "%m/%d/%Y %I:%M:%S %p")
@@ -98,28 +98,28 @@ dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FALSE)
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 # Connect to the SQLite database
 dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 #Disconnect DB (Don't use all the time)
-dbDisconnect(dcon)
+#dbDisconnect(dcon)
 ```
 
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 dbListTables(dcon)
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 query <- "SELECT * FROM jan_to_mar_taxi_2021"
 df <- dbGetQuery(dcon, query)
 ```
 
-
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+'''
 query <- "
 SELECT
   *,
@@ -169,7 +169,8 @@ WHERE
 "
 
 # Fetch the data
-df <- dbGetQuery(dcon, query)
+#df <- dbGetQuery(dcon, query)
+'''
 ```
 
 ```{r, echo = FALSE}
