@@ -108,7 +108,6 @@ dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 #dbDisconnect(dcon)
 ```
 
-
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 dbListTables(dcon)
 ```
