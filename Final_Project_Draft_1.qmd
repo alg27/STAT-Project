@@ -41,7 +41,6 @@ library(RSQLite)
 # pickup_datetime_formatted
 ```
 
-
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 # Make database
 # df <- read.csv("jan_to_mar_taxi_2021.csv")
@@ -115,59 +114,6 @@ dbListTables(dcon)
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 query <- "SELECT * FROM jan_to_mar_taxi_2021"
 df <- dbGetQuery(dcon, query)
-```
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# query <- "
-# SELECT
-#   *,
-#   -- Assuming tpep_pickup_datetime and tpep_dropoff_datetime are in the format 'YYYY-MM-DD HH:MM:SS'
-#   -- Calculating trip time in minutes
-#   (julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24 * 60 AS trip_time,
-#   -- Calculating speed in miles per hour
-#   trip_distance / ((julianday(tpep_dropoff_datetime) - julianday(tpep_pickup_datetime)) * 24) AS speed,
-#   -- Calculating fare per mile with handling for division by zero
-#   CASE
-#     WHEN trip_distance > 0 THEN fare_amount / trip_distance
-#     ELSE NULL
-#   END AS fare_per_mile
-# FROM
-#   jan_to_mar_taxi_2021
-# WHERE
-#   -- Filtering conditions
-#   strftime('%m', tpep_dropoff_datetime) < '04'
-#   AND strftime('%Y', tpep_dropoff_datetime) = '2021'
-#   AND (
-#     strftime('%H', tpep_dropoff_datetime) != '00'
-#     OR strftime('%M', tpep_dropoff_datetime) != '00'
-#     OR strftime('%S', tpep_dropoff_datetime) != '00'
-#   )
-#   AND (
-#     strftime('%H', tpep_pickup_datetime) != '00'
-#     OR strftime('%M', tpep_pickup_datetime) != '00'
-#     OR strftime('%S', tpep_pickup_datetime) != '00'
-#   )
-#   AND strftime('%Y', tpep_pickup_datetime) = '2021'
-#   AND trip_time > (10 / 60) -- Trip must be longer than 10 seconds
-#   AND trip_time < 600
-#   AND fare_per_mile < 50
-#   AND speed <= 120
-#   AND speed >= 0.15
-#   AND fare_amount > 0
-#   AND extra >= 0
-#   AND mta_tax >= 0
-#   AND tip_amount >= 0
-#   AND tolls_amount >= 0
-#   AND improvement_surcharge >= 0
-#   AND congestion_surcharge >= 0
-#   AND total_amount >= 0
-#   AND passenger_count < 20
-#   AND passenger_count > 0
-#   AND RatecodeID < 100;
-# "
-
-# Fetch the data
-#df <- dbGetQuery(dcon, query)
 ```
 
 ```{r, echo = FALSE}
@@ -266,7 +212,7 @@ Similarly, the relationship between trip distance and fare amount is generally p
 
 For instance, trips under standard metered rates (RateCodeID 1) display a clear linear relationship between distance and fare, as expected. However, for trips with special rate codes, such as those to airports (RateCodeID 2 for JFK, RateCodeID 3 for Newark), the distance-fare relationship might not follow the standard linear pattern due to flat-rate pricing. These special rate codes introduce variations in the distance-fare correlation that are not present under standard metered fares.
 
-There is only one point with a RateCodeID of 6, signaling a group ride. This is just a ride where you share with strangers. Out of the taxi cab rides we took, only one was a group ride. This is most likely because group rides are very difficult to get in a taxi.  
+There is only one point with a RateCodeID of 6, signaling a group ride. This is just a ride where you share with strangers. Out of the taxi cab rides we took, only one was a group ride. This is most likely because group rides are very difficult to get in a taxi.
 
 This can be observed by the tables shown below:
 
@@ -554,14 +500,14 @@ print(summary_data)
 print(summary_stats)
 ```
 
-There is an outlier in the yhat below of greater than 400, showing that someone in the taxi cab has had a ride that had a much mor expensive fare amount than usual. 
+There is an outlier in the yhat below of greater than 400, showing that someone in the taxi cab has had a ride that had a much mor expensive fare amount than usual.
+
 ```{r, echo = FALSE}
 yhat = fitted(model)
 ehat = residuals(model)
 plot(yhat, ehat)
 abline(h=0)
 ```
-
 
 ```{r, echo = FALSE}
 rhat = rstandard(model)
@@ -577,12 +523,7 @@ Below are a few questions that we have answered and believe are crucial insights
 
 What factors contribute to the decline in ridership observed in late January?
 
-The decline in ridership observed in late January 
-could be attributed to external factors such as sudden weather changes, 
-particularly a freeze, which may not be explicitly captured in the dataset. 
-Severe weather conditions can significantly impact transportation services, 
-leading to a decrease in taxi usage as people opt for alternative modes 
-of transportation or choose to stay indoors.
+The decline in ridership observed in late January could be attributed to external factors such as sudden weather changes, particularly a freeze, which may not be explicitly captured in the dataset. Severe weather conditions can significantly impact transportation services, leading to a decrease in taxi usage as people opt for alternative modes of transportation or choose to stay indoors.
 
 # Question 2: Effect of Pickup and Dropoff Locations on Fare
 
