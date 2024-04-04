@@ -3,21 +3,25 @@ title: "The Pulse of the City: Unveiling NYC Taxi Patterns - Group 13 Final Proj
 author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
 date: '3/30/2024'
 format:
-  pdf: default
-editor: visual
-fontsize: 10pt
-geometry: margin=1in
-toc: true                   
-toc-depth: 2  
+  revealjs: 
+    # embed-resources: true
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    css: styles.css
+server: shiny
 ---
 
-# Introduction
+# Introduction {background="#6B6B6B"}
+
+## Introduction
 
 New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
 
 Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
-# Plots
+# Plot 1 Trip Distance vs Fare Amount
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 options(bitmapType='cairo')
@@ -123,8 +127,6 @@ sampled_indices <- sample(nrow(df), size = 100000)
 # Subset the DataFrame with the sampled indices
 df <- df[sampled_indices, ]
 ```
-
-# Plot 1 Trip Distance vs Fare Amount
 
 For this plot, we are examining the relationship between the trip distance and the amount the person got charged for their fare using a scatterplot. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.This suggests that there is a positive correlation between trip distance and fare amount. In other words, longer trips tend to result in higher fare amounts. The scatter plot provides a quick and intuitive way to observe the trend and relationship between these two variables.
 
