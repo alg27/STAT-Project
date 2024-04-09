@@ -21,7 +21,7 @@ New York, the city that never sleeps, has a densely populated city, meaning not 
 
 Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
-### Plot 1 Trip Distance vs Fare Amount
+# Plot 1 Trip Distance vs Fare Amount {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 options(bitmapType='cairo')
@@ -149,7 +149,7 @@ ggplot(df, aes(x = trip_distance, y = fare_amount)) +
 
 ```
 
-### Plot 2 Scatterplot of Trip Time and Total Amount
+# Plot 2 Scatterplot of Trip Time and Total Amount {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Fit a linear model
@@ -175,7 +175,7 @@ ggplot(df, aes(x = trip_time, y = total_amount)) +
   theme(legend.position = "none")
 ```
 
-# Plot 3 Violin Plot of Fare Amount by Rate Code
+# Plot 3 Violin Plot of Fare Amount by Rate Code {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, fig.width=12}
 plt <- ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
@@ -190,7 +190,7 @@ plt <- ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
 suppressWarnings(print(plt))
 ```
 
-### Analysis in plots 1, 2, and 3
+# Analysis in plots 1, 2, and 3 {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
 # For Trip Distance vs. Fare Amount
@@ -218,7 +218,7 @@ ggplot(df, aes(x = trip_time, y = fare_amount)) +
   theme(legend.position = "none")
 ```
 
-### Plot 4 Density of Pick up and Drop off location
+# Plot 4 Density of Pick up and Drop off location {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -240,7 +240,7 @@ legend("topright", # Position of the legend within the plot area
        lwd = 2) # Line width for the legend keys
 ```
 
-### Plot 5 Line Graph of Number of Rides Per Day
+# Plot 5 Line Graph of Number of Rides Per Day {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Line chart of month and number of taxi trips
@@ -258,7 +258,7 @@ plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = 
 
 ```
 
-### Plot 6 Daily Total Fare Amount
+# Plot 6 Daily Total Fare Amount {style="font-size: 24px;"}
 
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
@@ -271,7 +271,7 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
   theme_minimal()
 ```
 
-### Plot 7 Heat Map of Taxi Pickups by Day of Week and Hour
+# Plot 7 Heat Map of Taxi Pickups by Day of Week and Hour {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Convert pickup_time to day of the week and hour
@@ -288,7 +288,7 @@ ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) 
   theme_minimal()
 ```
 
-### Analysis on plots 5, 6 and 7
+# Analysis on plots 5, 6 and 7 {style="font-size: 24px;"}
 
 ```{r, echo=FALSE}
 # Assuming df has been pre-processed as before
@@ -322,7 +322,7 @@ ggplot() +
 
 ```
 
-### Plot 8 Number of Rides by Passenger Count
+# Plot 8 Number of Rides by Passenger Count {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Aggregate data by passenger count
@@ -335,7 +335,7 @@ ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
   theme_minimal()
 ```
 
-### Plot 9 Relationship Between Tip and Total Amount
+# Plot 9 Relationship Between Tip and Total Amount {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 ggplot(df, aes(x = tip_amount, y = total_amount)) +
@@ -346,7 +346,7 @@ ggplot(df, aes(x = tip_amount, y = total_amount)) +
   theme_minimal()
 ```
 
-### Plot 10 Histogram of Trip Time
+# Plot 10 Histogram of Trip Time {style="font-size: 24px;"}
 
 ```{r, echo = FALSE}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
@@ -355,7 +355,7 @@ hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")
 ```
 
-### Plot 11 Pie Chart of Payment Method
+# Plot 11 Pie Chart of Payment Method {style="font-size: 24px;"}
 
 ```{r, echo = FALSE}
 library(scales)
@@ -373,7 +373,7 @@ pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages)
 
 ```
 
-### Plot 12 Scatter plot between mean fare amount and passenger count
+# Plot 12 Scatter plot between mean fare amount and passenger count {style="font-size: 20px;"}
 
 ```{r, echo=FALSE}
 # Calculate the mean fare amount for each count of passengers
@@ -388,7 +388,7 @@ ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
   scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
 ```
 
-### Statistical Modeling
+# Statistical Modeling {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, results = 'hide'}
 x <- df$trip_distance
@@ -461,15 +461,15 @@ qqnorm(rhat)
 qqline(rhat)
 ```
 
-### Advanced Questions
+# Advanced Questions {style="font-size: 24px;"}
 
 Below are a few questions that we have answered and believe are crucial insights that we discovered throughout are work, data wrangling and plot making.
 
-### Question 1: Outlier Explanation
+# Question 1: Outlier Explanation {style="font-size: 24px;"}
 
 What factors contribute to the decline in ridership observed in late January?
 
-### Question 2: Effect of Pickup and Dropoff Locations on Fare
+# Question 2: Effect of Pickup and Dropoff Locations on Fare {style="font-size: 20px;"}
 
 How do the pickup and dropoff locations (PULocationID and DOLocationID) affect the fare amount (fare_amount)?
 
@@ -483,7 +483,7 @@ pickup_dropoff_effect <- df %>%
 pickup_dropoff_effect
 ```
 
-### Question 3: Patterns in Taxi Usage Over Time
+# Question 3: Patterns in Taxi Usage Over Time {style="font-size: 20px;"}
 
 How does taxi usage, in terms of number of trips and total amount charged (total_amount), vary over different times of the day and days of the week?
 
@@ -497,7 +497,7 @@ taxi_usage <- df %>%
 taxi_usage
 ```
 
-### Question 4: Price Prediction
+# Question 4: Price Prediction {style="font-size: 24px;"}
 
 Can total fares be predicted by distance, theoretical time, and ratecodeIDs?
 
