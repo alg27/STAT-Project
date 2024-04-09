@@ -19,7 +19,7 @@ server: shiny
 
 New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
 
-Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
+We will be analyzing the Taxi cab ride data from January to March of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, we will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
 # Plot 1 Trip Distance vs Fare Amount {style="font-size: 24px;"}
 
