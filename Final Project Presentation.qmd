@@ -1,7 +1,7 @@
 ---
-title: "The Pulse of the City: Unveiling NYC Taxi Patterns - Group 13 Final Project"
+title: "Unveiling NYC Taxi Patterns - Group 13 Final Project"
 author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
-date: '3/30/2024'
+date: '4/18/2024'
 format:
   revealjs: 
     # embed-resources: true
@@ -21,6 +21,26 @@ New York, the city that never sleeps, has a densely populated city, meaning not 
 
 We will be analyzing the Taxi cab ride data from January to March of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, we will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
+# Data Overview {style="font-size: 24px;"}
+
+-   18 columns, with each row being a taxi trip record
+
+    -   Notable columns include: pickup/dropoff time, trip_distance, fare_amount, etc.
+
+    -   Additional columns were created, such as trip time, speed, and fare/mile that were also used in calculations
+
+-   Time period: January 2021 - March 2021
+
+# Data Cleaning {style="font-size: 24px;"}
+
+-   Original data set had rides for all of 2021, so we filtered out all rides that were not between January and March
+
+-   All trips shorter than 10 seconds were filtered out, as the taxi driver likely accidentally turned on their taxi meter
+
+-   Any fees that were less than 0 were removed
+
+-   Trips without a pickup time or dropoff time were filtered out
+
 # Plot 1 Trip Distance vs Fare Amount {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
@@ -33,72 +53,6 @@ library(lubridate)
 library(dplyr)
 library(ggplot2)
 library(RSQLite)
-```
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# pickup_datetime <- "2021-01-01 00:30:10"
-# pickup_datetime_parsed <- as.POSIXct(pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
-# 
-# # Convert to the desired format "mm/dd/yyyy hh:mm:ss AM/PM"
-# pickup_datetime_formatted <- format(pickup_datetime_parsed, "%m/%d/%Y %I:%M:%S %p")
-# 
-# pickup_datetime_formatted
-```
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# Make database
-# df <- read.csv("jan_to_mar_taxi_2021.csv")
-# df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
-# df$tpep_pickup_datetime_formatted <- format(df$tpep_pickup_datetime, "%m/%d/%Y %I:%M:%S %p")
-# 
-# df <- df %>% select(-tpep_pickup_datetime)
-# df <- df %>% rename(tpep_pickup_datetime = tpep_pickup_datetime_formatted)
-# first_col_name <- names(df)[1]
-# df <- df %>% select({{first_col_name}}, tpep_pickup_datetime, everything())
-# 
-# df$tpep_dropoff_datetime <- as.POSIXct(df$tpep_dropoff_datetime, format = "%m/%d/%Y %I:%M:%S %p")
-# df$tpep_dropoff_datetime <- format(df$tpep_dropoff_datetime, "%m/%d/%Y %I:%M:%S %p")
-# 
-# df <- df %>%
-#   mutate(
-#     pickup_time = mdy_hms(tpep_pickup_datetime),
-#     dropoff_time = mdy_hms(tpep_dropoff_datetime),
-#     trip_time = as.numeric(difftime(dropoff_time, pickup_time, units = "mins")),
-#     speed = trip_distance / (trip_time/ 60), # Speed in miles per hour
-#     fare_per_mile = if_else(trip_distance > 0, fare_amount / trip_distance, NA_real_) # Handle division by zero
-#   ) %>%
-#   #filter stuff
-#   filter(
-#     month(dropoff_time) < 4,
-#     year(dropoff_time) == 2021,
-#     hour(dropoff_time) != 0 & minute(dropoff_time) != 0 & second(dropoff_time) != 0,
-#     hour(pickup_time) != 0 & minute(pickup_time) != 0 & second(pickup_time) != 0,
-#     !is.na(pickup_time),
-#     !is.na(dropoff_time),
-#     year(pickup_time) == 2021,
-#     !is.na(fare_per_mile),
-#     fare_per_mile < 50,
-#     speed <= 120,
-#     speed >= .15,
-#     fare_amount > 0,
-#     #trip must be longer than 10 seconds
-#     trip_time > (10/60),
-#     trip_time < 600,
-#     extra >= 0,
-#     mta_tax >= 0,
-#     tip_amount >= 0,
-#     tolls_amount >= 0,
-#     improvement_surcharge >= 0,
-#     congestion_surcharge >= 0,
-#     total_amount >= 0,
-#     passenger_count < 20,
-#     passenger_count > 0,
-#     RatecodeID < 100
-#   )
-# 
-# # Create the table in SQLite database
-# dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
-# dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FALSE)
 ```
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
@@ -149,48 +103,7 @@ ggplot(df, aes(x = trip_distance, y = fare_amount)) +
 
 ```
 
-# Plot 2 Scatterplot of Trip Time and Total Amount {style="font-size: 20px;"}
-
-```{r, echo = FALSE}
-# Fit a linear model
-lm_model <- lm(total_amount ~ trip_time, data = df)
-
-# Extract coefficients
-intercept <- round(coef(lm_model)[1], 2)
-slope <- round(coef(lm_model)[2], 2)
-
-# Construct the equation string
-equation <- paste("y =", intercept, ifelse(slope >= 0, "+", "-"), abs(slope), "*x")
-
-# Plot with ggplot2, including the linear regression line and the equation
-ggplot(df, aes(x = trip_time, y = total_amount)) +
-  geom_point(color = "deepskyblue3", alpha = 0.5) +  # Plot data points with some transparency
-  geom_smooth(method = "lm", formula = y ~ x, color = "red", se = FALSE) +  # Add a linear regression line without standard error
-  annotate("text", x = Inf, y = Inf, label = equation, hjust = 1.1, vjust = 2, color = "red", size = 5) +  # Display the equation
-  labs(title = "Total Amount Over Trip Duration",
-       x = "Trip Duration (minutes)",
-       y = "Total Amount ($)",
-       caption = paste("Data: NYC Taxi Rides. Linear Model:", equation)) +
-  theme_minimal() +
-  theme(legend.position = "none")
-```
-
-# Plot 3 Violin Plot of Fare Amount by Rate Code {style="font-size: 24px;"}
-
-```{r, echo = FALSE, fig.width=12}
-plt <- ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
-  geom_violin(trim = FALSE, fill = 'skyblue', color = 'blue', alpha = 0.7) +
-  stat_summary(fun = median, geom = "point", shape = 23, size = 3, color = "darkred", fill = "yellow") +
-  stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), 2)), vjust = -1, color = "darkgreen") +
-  labs(title = "Violin Plot of Fare Amount by Rate Code",
-       x = "Rate Code ID",
-       y = "Fare Amount ($)") +
-  theme_minimal()
-
-suppressWarnings(print(plt))
-```
-
-# Analysis in plots 1, 2, and 3 {style="font-size: 24px;"}
+# Trip Time Vs. Fare Amount by RatecodeID {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
 # For Trip Time vs. Fare Amount
@@ -205,7 +118,7 @@ ggplot(df, aes(x = trip_time, y = fare_amount)) +
   theme(legend.position = "none")
 ```
 
-# Plot 4 Density of Pick up and Drop off location {style="font-size: 20px;"}
+# Density of Pick up and Drop off location {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
@@ -227,7 +140,7 @@ legend("topright", # Position of the legend within the plot area
        lwd = 2) # Line width for the legend keys
 ```
 
-# Plot 5 Line Graph of Number of Rides Per Day {style="font-size: 20px;"}
+# Number of Rides Per Day {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Line chart of month and number of taxi trips
@@ -245,7 +158,7 @@ plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = 
 
 ```
 
-# Plot 6 Daily Total Fare Amount {style="font-size: 24px;"}
+# Daily Total Fare Amount {style="font-size: 24px;"}
 
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
@@ -258,7 +171,7 @@ ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
   theme_minimal()
 ```
 
-# Plot 7 Heat Map of Taxi Pickups by Day of Week and Hour {style="font-size: 20px;"}
+# Heat Map of Taxi Pickups by Day of Week and Hour {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Convert pickup_time to day of the week and hour
@@ -275,104 +188,13 @@ ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) 
   theme_minimal()
 ```
 
-# Analysis on plots 5, 6 and 7 {style="font-size: 24px;"}
-
-```{r, echo=FALSE}
-# Assuming df has been pre-processed as before
-df$day <- format(df$pickup_time, "%Y-%m-%d")
-
-# Aggregate for number of rides per day
-daily_counts <- df %>%
-  group_by(day) %>%
-  summarise(NumberOfRides = n(), .groups = 'drop')
-
-# Aggregate for total daily fare
-daily_fare_data <- df %>%
-  group_by(day) %>%
-  summarise(TotalFare = sum(fare_amount), .groups = 'drop')
-
-# Combine both datasets by day
-combined_data <- merge(daily_counts, daily_fare_data, by = "day")
-
-# Create the plot
-ggplot() +
-  geom_line(data = combined_data, aes(x = as.Date(day), y = NumberOfRides, colour = "Number of Rides"), linewidth = 1) +
-  geom_line(data = combined_data, aes(x = as.Date(day), y = TotalFare, colour = "Total Fare Amount"), linewidth = 1) +
-  scale_y_continuous(name = "Number of Rides", sec.axis = sec_axis(~./max(combined_data$TotalFare) * max(combined_data$NumberOfRides), name = "Total Fare Amount ($)")) +
-  labs(title = "Daily Number of Rides and Total Fare Amount",
-       x = "Date",
-       y = "Number of Rides") +
-  theme_minimal() +
-  scale_colour_manual("", 
-                      breaks = c("Number of Rides", "Total Fare Amount"),
-                      values = c("Number of Rides" = "blue", "Total Fare Amount" = "red"))
-
-```
-
-# Plot 8 Number of Rides by Passenger Count {style="font-size: 20px;"}
-
-```{r, echo = FALSE}
-# Aggregate data by passenger count
-passenger_count_data <- df %>%
-  group_by(passenger_count) %>%
-  summarise(Rides = n(), .groups = 'drop')
-ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
-  geom_bar(stat = "identity", fill = "orange") +
-  labs(title = "Number of Rides by Passenger Count", x = "Passenger Count", y = "Number of Rides") +
-  theme_minimal()
-```
-
-# Plot 9 Relationship Between Tip and Total Amount {style="font-size: 20px;"}
-
-```{r, echo = FALSE}
-ggplot(df, aes(x = tip_amount, y = total_amount)) +
-  geom_point(color = "purple") +
-  labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", 
-       x = "Tip Amount ($)", 
-       y = "Total Amount ($)") + 
-  theme_minimal()
-```
-
-# Plot 10 Histogram of Trip Time {style="font-size: 24px;"}
+# Histogram of Trip Time {style="font-size: 24px;"}
 
 ```{r, echo = FALSE}
 # Histogram of Trip Times less than 100 minutes for ease of viewing
 trip_time <- df$trip_time[df$trip_time < 100]
 hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")
-```
-
-# Plot 11 Pie Chart of Payment Method {style="font-size: 24px;"}
-
-```{r, echo = FALSE}
-library(scales)
-
-# Pie Chart of payment methods
-df_grouped_payments <- df %>% group_by(df$payment_type) %>% summarise(payment_total = sum(payment_type))
-df_grouped_payments <- df_grouped_payments %>% filter(row_number() <= n()-1)
-labels <- c("Credit Card","Cash","No Charge","Dispute")
-
-# Calculate percentages
-percentages <- percent(df_grouped_payments$payment_total / sum(df_grouped_payments$payment_total))
-
-# Create pie chart
-pie(df_grouped_payments$payment_total, labels = paste(labels, "\n", percentages),col = c("coral", "cornflowerblue", "chartreuse3", "red"), main = "How the Passengers Paid for the Trip")
-
-```
-
-# Plot 12 Scatter plot between mean fare amount and passenger count {style="font-size: 20px;"}
-
-```{r, echo=FALSE}
-# Calculate the mean fare amount for each count of passengers
-mean_fare <- df %>%
-  group_by(passenger_count) %>%
-  summarize(mean_fare_amount = mean(fare_amount))
-# Scatter plot of mean fare amount vs. passenger count
-ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
-  geom_point(color = "darkslateblue") +
-  geom_text(aes(label = round(mean_fare_amount, 2)), vjust = -0.5, color = "darkseagreen4") +
-  labs(title = "Mean Fare Amount vs. Passenger Count", x = "Passenger Count", y = "Mean Fare Amount ($)") +
-  scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
 ```
 
 # Statistical Modeling {style="font-size: 24px;"}
