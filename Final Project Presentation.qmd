@@ -17,7 +17,7 @@ server: shiny
 
 # Introduction {style="font-size: 24px;"}
 
-New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
+New York City is densely populated, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
 
 We will be analyzing the Taxi cab ride data from January to March of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, we will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
@@ -41,7 +41,7 @@ We will be analyzing the Taxi cab ride data from January to March of 2021 to det
 
 -   Trips without a pickup time or dropoff time were filtered out
 
-# Plot 1 Trip Distance vs Fare Amount {style="font-size: 24px;"}
+# Trip Distance vs Fare Amount {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 options(bitmapType='cairo')
@@ -118,7 +118,7 @@ ggplot(df, aes(x = trip_time, y = fare_amount)) +
   theme(legend.position = "none")
 ```
 
-# Density of Pick up and Drop off location {style="font-size: 20px;"}
+# Density Plot of Pick up and Drop off location {style="font-size: 20px;"}
 
 ```{r, echo = FALSE}
 # Density plot of pick up and drop off locations
