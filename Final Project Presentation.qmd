@@ -199,6 +199,30 @@ hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")
 ```
 
+# Secondary Dataset - Central Park Weather {style="font-size: 24px;"}
+
+```{r, echo = false}
+df_weather <- read.csv("NYC_Central_Park_weather_1869-2022.csv")
+df_weather <- df_weather %>% filter(
+  year(DATE) == 2021,
+  month(DATE) < 4)
+
+dbListTables(dcon)
+dbListFields(dcon, "jan_to_mar_taxi_2021")
+query <- "SELECT tpep_pickup_datetime FROM jan_to_mar_taxi_2021"
+
+query1 <- "SELECT strftime('%Y-%m-%d', datetime(pickup_time, 'unixepoch')) AS day, COUNT(*) AS count FROM jan_to_mar_taxi_2021 GROUP BY day"
+result <- dbSendQuery(dcon, query1)
+ride_count_df_weather <- dbFetch(result)
+ride_count_df_weather
+
+rain_model <- lm(ride_count_df_weather$count ~ df_weather$PRCP)
+plot(df_weather$PRCP, ride_count_df_weather$count); abline(rain_model, col = "red")
+
+snow_model <- lm(ride_count_df_weather$count ~ df_weather$SNOW)
+plot(df_weather$SNOW, ride_count_df_weather$count); abline(snow_model, col = "red")
+```
+
 # Statistical Modeling {style="font-size: 24px;"}
 
 ```{r, echo = FALSE, results = 'hide'}
@@ -273,16 +297,17 @@ qqline(rhat)
 ```
 
 # Killer Plot {background="#6B6B6B"}
+
 ::: columns
 ::: {.column width="25%"}
 ::: {style="font-size: 40%"}
-
 ```{r, , echo = FALSE}
 #| panel: fill
 plotOutput('plot')
 ```
 :::
 :::
+
 ::: {.column width="60%"}
 ```{r}
 sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1)
@@ -290,6 +315,7 @@ selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID))
 ```
 :::
 :::
+
 ```{r}
 #| context: "server"
 output$plot <- renderPlot({
@@ -304,9 +330,6 @@ output$plot <- renderPlot({
   print(p)
 })
 ```
-
-
-
 
 # Advanced Questions {background="#6B6B6B"}
 
