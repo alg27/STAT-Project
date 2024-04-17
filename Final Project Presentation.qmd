@@ -52,7 +52,9 @@ x11(type='cairo')
 library(lubridate)
 library(dplyr)
 library(ggplot2)
+library(shiny)
 library(RSQLite)
+library(DBI)
 ```
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
@@ -269,6 +271,42 @@ rhat = rstandard(model)
 qqnorm(rhat)
 qqline(rhat)
 ```
+
+# Killer Plot {background="#6B6B6B"}
+::: columns
+::: {.column width="25%"}
+::: {style="font-size: 40%"}
+
+```{r, , echo = FALSE}
+#| panel: fill
+plotOutput('plot')
+```
+:::
+:::
+::: {.column width="60%"}
+```{r}
+sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1)
+selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID))
+```
+:::
+:::
+```{r}
+#| context: "server"
+output$plot <- renderPlot({
+  req(input$hour, input$rateCode)
+  filtered_data <- df %>%
+    filter(hour(pickup_time) %in% input$hour, RatecodeID == input$rateCode)
+
+  p <- ggplot(filtered_data, aes(x = trip_distance, y = fare_amount, color = fare_amount)) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm") +
+    labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
+  print(p)
+})
+```
+
+
+
 
 # Advanced Questions {background="#6B6B6B"}
 
