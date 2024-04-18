@@ -49,30 +49,24 @@ x11(type='cairo')
 ```
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
+#| context: setup
 library(lubridate)
 library(dplyr)
 library(ggplot2)
 library(shiny)
 library(RSQLite)
 library(DBI)
-```
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
 # Connect to the SQLite database
 dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
-```
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
 #Disconnect DB (Don't use all the time)
 #dbDisconnect(dcon)
-```
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
+
 query <- "SELECT * FROM jan_to_mar_taxi_2021"
 df <- dbGetQuery(dcon, query)
-```
 
-```{r, echo = FALSE}
 set.seed(24246452)
 sampled_indices <- sample(nrow(df), size = 100000)
 
@@ -80,7 +74,14 @@ sampled_indices <- sample(nrow(df), size = 100000)
 df <- df[sampled_indices, ]
 ```
 
-```{r, echo = FALSE}
+```{r}
+#| panel: fill
+plotOutput('plot1')
+```
+
+```{r}
+#| context: server
+library(ggplot2)
 # Fit a linear model
 lm_model <- lm(fare_amount ~ trip_distance, data = df)
 
@@ -92,7 +93,7 @@ slope <- round(coef(lm_model)[2], 2)
 equation <- paste("y = ", intercept, " + ", slope, "*x", sep = "")
 
 # Create the plot with ggplot2
-ggplot(df, aes(x = trip_distance, y = fare_amount)) +
+output$plot1 <- renderPlot({ggplot(df, aes(x = trip_distance, y = fare_amount)) +
   geom_point(aes(color = trip_distance), alpha = 0.5) +  # Plot data points
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  # Linear regression line without standard error
   geom_text(x = Inf, y = Inf, label = equation, hjust = 1.1, vjust = 2, size = 5, color = "red") +  # Display the equation
@@ -101,15 +102,23 @@ ggplot(df, aes(x = trip_distance, y = fare_amount)) +
        y = "Fare Amount ($)",
        caption = paste("Data: NYC Taxi Rides. Linear Model:", equation)) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(legend.position = "none")})
 
 ```
 
 # Trip Time Vs. Fare Amount by RatecodeID {style="font-size: 24px;"}
 
-```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
+```{r}
+#| panel: fill
+plotOutput('plot2')
+```
+
+```{r, fig.align='left', fig.width=13, fig.height=9}
+#| context: server
+library(ggplot2)
 # For Trip Time vs. Fare Amount
-ggplot(df, aes(x = trip_time, y = fare_amount)) +
+
+output$plot2 <- renderPlot({ggplot(df, aes(x = trip_time, y = fare_amount)) +
   geom_point(aes(color = trip_time), alpha = 0.5) +
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  
   facet_wrap(~ RatecodeID, scales = "free") +
@@ -117,14 +126,20 @@ ggplot(df, aes(x = trip_time, y = fare_amount)) +
        x = "Trip Time (minutes)",
        y = "Fare Amount ($)") +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(legend.position = "none")})
 ```
 
 # Density Plot of Pick up and Drop off location {style="font-size: 20px;"}
+```{r}
+#| panel: fill
+plotOutput('plot3')
+```
 
-```{r, echo = FALSE}
-# Density plot of pick up and drop off locations
-plot(density(df$PULocationID), 
+```{r}
+#| context: server
+library(ggplot2)
+
+output$plot3 <- renderPlot({plot(density(df$PULocationID), 
      main = "Density Plot of Pick Up and Drop off Location", 
      xlab = "Location ID", 
      ylab = "Density", 
@@ -139,12 +154,19 @@ lines(density(df$DOLocationID), col = "blue", lwd = 2)
 legend("topright", # Position of the legend within the plot area
        legend = c("Pickup Location", "Dropoff Location"), # Text for the legend
        col = c("red", "blue"), # Colors for the legend keys
-       lwd = 2) # Line width for the legend keys
+       lwd = 2)})
 ```
 
 # Number of Rides Per Day {style="font-size: 20px;"}
+```{r}
+#| panel: fill
+plotOutput('plot4')
+```
 
-```{r, echo = FALSE}
+```{r}
+#| context: server
+library(ggplot2)
+
 # Line chart of month and number of taxi trips
 # Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
 df$pickup_time <- as.POSIXct(df$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
@@ -155,27 +177,40 @@ daily_counts <- aggregate(x = list(Count = rep(1, nrow(df))), by = list(Day = df
 # Plot
 max_count <- max(daily_counts$Count)
 
-# Plotting with y-axis starting at 0
-plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per day", xlab = "Day", ylab = "Number of Rides"); axis(1, at = 1:length(daily_counts$Day), labels = daily_counts$Month)
+output$plot4 <- renderPlot({plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per day", xlab = "Day", ylab = "Number of Rides"); axis(1, at = 1:length(daily_counts$Day), labels = daily_counts$Month)})
 
 ```
 
 # Daily Total Fare Amount {style="font-size: 24px;"}
+```{r}
+#| panel: fill
+plotOutput('plot5')
+```
 
-```{r, echo = FALSE}
+```{r}
+#| context: server
+library(ggplot2)
 # Aggregate data for total daily fare
 daily_fare_data <- df %>%
   group_by(day) %>%
   summarise(TotalFare = sum(fare_amount), .groups = 'drop')
-ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
+output$plot5 <- renderPlot({ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
   geom_line(color = "darkred") +
   labs(title = "Daily Total Fare Amount", x = "Date", y = "Total Fare Amount ($)") +
-  theme_minimal()
+  theme_minimal()})
 ```
 
 # Heat Map of Taxi Pickups by Day of Week and Hour {style="font-size: 20px;"}
 
-```{r, echo = FALSE}
+```{r}
+#| panel: fill
+plotOutput('plot6')
+```
+
+```{r}
+#| context: server
+library(ggplot2)
+
 # Convert pickup_time to day of the week and hour
 df$pickup_day <- weekdays(df$pickup_time)
 df$pickup_hour <- hour(df$pickup_time)
@@ -183,49 +218,78 @@ df$pickup_hour <- hour(df$pickup_time)
 pickup_heatmap_data <- df %>%
   group_by(pickup_day, pickup_hour) %>%
   summarise(Count = n(), .groups = 'drop')
-ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) +
+output$plot6 <- renderPlot({ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) +
   geom_tile() +
   scale_fill_gradient(low = "lightblue", high = "darkblue") +
   labs(title = "Heatmap of Taxi Pickups by Day of Week and Hour", x = "Hour of the Day", y = "Day of the Week") +
-  theme_minimal()
+  theme_minimal()})
 ```
 
 # Histogram of Trip Time {style="font-size: 24px;"}
-
-```{r, echo = FALSE}
-# Histogram of Trip Times less than 100 minutes for ease of viewing
-trip_time <- df$trip_time[df$trip_time < 100]
-hist(trip_time,main = "Histogram of Trip Time",
-     xlab = "Trip Time")
+```{r}
+#| panel: fill
+plotOutput('plot7')
 ```
 
+```{r}
+#| context: server
+# Histogram of Trip Times less than 100 minutes for ease of viewing
+trip_time <- df$trip_time[df$trip_time < 100]
+output$plot7 <- renderPlot({hist(trip_time,main = "Histogram of Trip Time",
+     xlab = "Trip Time")})
+```
 # Secondary Dataset - Central Park Weather {style="font-size: 24px;"}
+```{r}
+#| panel: fill
+plotOutput('plot8')
+```
 
-```{r, echo = FALSE, results = 'hide'}
+```{r, results = 'hide'}
+#| context: server 
+#| fig-width: 6
+#| fig-height: 3
 df_weather <- read.csv("NYC_Central_Park_weather_1869-2022.csv")
 df_weather <- df_weather %>% filter(
   year(DATE) == 2021,
   month(DATE) < 4)
 
-dbListTables(dcon)
-dbListFields(dcon, "jan_to_mar_taxi_2021")
-query <- "SELECT tpep_pickup_datetime FROM jan_to_mar_taxi_2021"
-
 query1 <- "SELECT strftime('%Y-%m-%d', datetime(pickup_time, 'unixepoch')) AS day, COUNT(*) AS count FROM jan_to_mar_taxi_2021 GROUP BY day"
 result <- dbSendQuery(dcon, query1)
 ride_count_df_weather <- dbFetch(result)
-ride_count_df_weather
+ride_count_df_weather <- ride_count_df_weather %>% rename(DATE = day)
 
-rain_model <- lm(ride_count_df_weather$count ~ df_weather$PRCP)
-plot(df_weather$PRCP, ride_count_df_weather$count); abline(rain_model, col = "red")
+merged_df <- merge(df_weather, ride_count_df_weather, by = "DATE")
 
-snow_model <- lm(ride_count_df_weather$count ~ df_weather$SNOW)
-plot(df_weather$SNOW, ride_count_df_weather$count); abline(snow_model, col = "red")
+# Precipitation vs Ride Count
+output$plot8 <- renderPlot({
+ggplot(merged_df, aes(x = PRCP, y = count)) +
+  geom_point() +  # scatter plot
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # add linear regression line
+  labs(x = "Amount of Precipitation (inches)", y = "Ride Count", title = "Precipitation vs Ride Count") + 
+  theme_minimal()})
+```
+
+# Secondary Dataset - Central Park Weather {style="font-size: 24px;"}
+```{r}
+#| panel: fill
+plotOutput('plot9')
+```
+
+```{r, results = 'hide'}
+#| context: server 
+# Snow vs Ride Count
+output$plot9 <- renderPlot({
+ggplot(merged_df, aes(x = SNOW, y = count)) +
+  geom_point() +  # scatter plot
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # add linear regression line
+  labs(x = "Amount of Snow (inches)", y = "Ride Count", title = "Snow vs Ride Count") + 
+  theme_minimal()})
 ```
 
 # Statistical Modeling {style="font-size: 24px;"}
 
-```{r, echo = FALSE, results = 'hide'}
+```{r, results = 'hide'}
+#| context: setup 
 x <- df$trip_distance
 y <- df$fare_amount
 
@@ -282,22 +346,51 @@ print(summary_residuals)
 print(summary_data)
 print(summary_stats)
 ```
-
-```{r, echo = FALSE}
-yhat = fitted(model)
-ehat = residuals(model)
-plot(yhat, ehat)
-abline(h=0)
+```{r}
+#| panel: fill
+plotOutput('plot10', height = "250px")
+plotOutput('plot11', height = "250px")
 ```
 
-```{r, echo = FALSE}
-rhat = rstandard(model)
-qqnorm(rhat)
-qqline(rhat)
+```{r, results = 'hide'}
+#| context: server 
+# Assuming 'df' has the columns 'trip_distance' and 'fare_amount'
+x <- df$trip_distance
+y <- df$fare_amount
+
+# Fit the linear model
+model <- lm(y ~ x)
+
+# Get fitted values and residuals
+df$fitted_values <- fitted(model)
+df$residuals <- residuals(model)
+
+# Create the ggplot
+output$plot10 <- renderPlot({ggplot(df, aes(x = fitted_values, y = residuals)) +
+    geom_point(alpha = 0.5) +  # Plot points with some transparency
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +  # Add a horizontal line at y = 0
+    labs(title = "Plot of Residuals vs Fitted Values",
+         x = "Fitted Values",
+         y = "Residuals") +
+    theme_minimal()})
 ```
 
 
-::: {.fragment .fade-in-then-semi-out}
+```{r}
+#| context: server 
+library(ggpubr)
+# Calculate standardized residuals
+rhat <- rstandard(model)
+
+# Create the QQ plot using ggpubr
+output$plot11 <- renderPlot({ggqqplot(rhat, 
+                    title = "QQ Plot of Standardized Residuals",
+                    ggtheme = theme_minimal())})
+
+# Print the plot
+dbDisconnect(dcon)
+```
+
 
 ## Killer Plot
 
@@ -311,13 +404,13 @@ library(RSQLite)
 library(DBI)
 dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 query <- "SELECT * FROM jan_to_mar_taxi_2021"
-df <- dbGetQuery(dcon, query)
+ddf <- dbGetQuery(dcon, query)
 set.seed(24246452)
-sampled_indices <- sample(nrow(df), size = 100000)
+sampled_indices <- sample(nrow(ddf), size = 100000)
 
 # Subset the DataFrame with the sampled indices
-df <- df[sampled_indices, ]
-df$pickup_time <- as.POSIXct(df$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
+ddf <- ddf[sampled_indices, ]
+ddf$pickup_time <- as.POSIXct(ddf$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
 ```
 
 ```{r}
@@ -340,7 +433,7 @@ sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1
 dataset <- reactive({
   req(input$hour, input$rateCode)
   # Filter the data based on the selected hour and rate code
-  df %>% 
+  ddf %>% 
     filter(hour(pickup_time) >= input$hour[1],
            hour(pickup_time) <= input$hour[2],
            RatecodeID == input$rateCode)
@@ -350,9 +443,11 @@ output$plot <- renderPlot({
   df_filtered <- dataset()
   req(nrow(df_filtered) > 0)  # Ensure there is data to plot
   
-  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount, color = fare_amount)) +
-    geom_point(alpha = 0.5) +
-    geom_smooth(method = "lm", na.rm = TRUE) +
+  # Adjusted plot to handle grouping correctly for geom_smooth()
+  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount)) +
+    geom_point(aes(color = fare_amount), alpha = 0.5) +  # Use color in geom_point
+    geom_smooth(method = "lm", formula = y ~ x, na.rm = TRUE, color = "blue", se = FALSE) +  # Specified color for smooth line, removed color aesthetic
+    scale_color_viridis_c(option = "magma", name = "Hour of Day") +
     labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
 })
 ```
