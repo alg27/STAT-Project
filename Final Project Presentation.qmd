@@ -1,6 +1,6 @@
 ---
 title: "Unveiling NYC Taxi Patterns - Group 13 Final Project"
-author: "Ryan Gan, Alicia Garza, Alan Yang, Kyle Zeng"
+author: "Ryan Gana, Alicia Garza, Alan Yang, Kyle Zeng"
 date: '4/18/2024'
 format:
   revealjs: 
