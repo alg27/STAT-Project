@@ -432,6 +432,82 @@ output$plot <- renderPlot({
 })
 ```
 
+
+## Killer Plot Part 2 - Clock
+```{r}
+#| context: server
+# Your previous code to generate gradient colors
+hours_df <- df %>%
+  mutate(
+    date = as.POSIXct(pickup_time, origin = "1970-01-01", tz = "UTC"),
+    hour = hour(date))
+
+avg_fare_price <- hours_df %>%
+  group_by(hour) %>% 
+  summarize(avg_fare_by_hour = mean(fare_amount))
+
+new_row <- data.frame(hour = 0, avg_fare_by_hour = 13)
+
+avg_fare_price <- rbind(new_row, avg_fare_price)
+
+normalized_fare <- (avg_fare_price$avg_fare_by_hour - min(avg_fare_price$avg_fare_by_hour)) / 
+                       (max(avg_fare_price$avg_fare_by_hour) - min(avg_fare_price$avg_fare_by_hour))
+
+gradient_colors <- colorRamp(c("green", "red"))(normalized_fare)
+
+to_rgb <- function(row) {
+  return(rgb(row[1], row[2], row[3], maxColorValue = 255))
+}
+gradient_rgb <- apply(gradient_colors, 1, to_rgb)
+
+# Create a data frame to store vertices and gradients for each sector
+sector_data <- lapply(0:23, function(i) {
+  start_angle <- i * 2 * pi / 24
+  end_angle <- (i + 1) * 2 * pi / 24
+  x <- c(0, sin(seq(start_angle, end_angle, length.out = 25)), 0)
+  y <- c(0, cos(seq(start_angle, end_angle, length.out = 25)), 0)
+  gradient <- gradient_rgb[i + 1]  # Indexing starts from 1
+  angle <- (start_angle + end_angle) / 2  # Midpoint of sector angle
+  data.frame(x = x, y = y, gradient = gradient, angle = angle)
+})
+
+# Combine data frames for all sectors
+sector_df <- do.call(rbind, sector_data)
+
+# Create data frame for hour labels
+hour_labels <- data.frame(
+  hour = 0:23,
+  angle = -(0:23) * 2 * pi / 24 + pi/2  # Adjust angle for clockwise rotation
+)
+
+# Define UI
+ui <- fluidPage(
+  titlePanel("Circular Plot with Hour Markers"),
+  mainPanel(
+    plotOutput("circularPlot", width = "400px", height = "400px")
+  )
+)
+
+# Define server logic
+server <- function(input, output, session) {
+  output$circularPlot <- renderPlot({
+    # Create circular plot with hour markers using ggplot
+    ggplot(sector_df) +
+      geom_polygon(aes(x = x, y = y, fill = gradient), color = "black") +
+      scale_fill_identity() +
+      geom_text(data = hour_labels, aes(x = 1.2 * cos(angle), y = 1.2 * sin(angle), label = hour), size = 4) +  # Adjust label positions
+      theme_void() +
+      coord_fixed() +
+      theme(legend.position = "none") +
+      labs(title = "Circular Plot with 24 Sectors and Hour Labels")
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+
 ```{r}
 on.exit(dbDisconnect(dcon), add = TRUE)
 ```
