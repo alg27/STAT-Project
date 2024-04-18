@@ -1,6 +1,6 @@
 ---
 title: "Unveiling NYC Taxi Patterns - Group 13 Final Project"
-author: "Ryan Gana, Alicia Garza, Alan Yang, Kyle Zeng"
+author: "Ryan Gan, Alicia Garza, Alan Yang, Kyle Zeng"
 date: '4/18/2024'
 format:
   revealjs: 
@@ -296,7 +296,6 @@ qqnorm(rhat)
 qqline(rhat)
 ```
 
-
 ::: {.fragment .fade-in-then-semi-out}
 
 ## Killer Plot
@@ -326,7 +325,6 @@ plotOutput('plot')
 ```
 
 ::: {style="font-size: 40%"}
-
 ::: {layout-ncol="3"}
 ```{r}
 selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID))
@@ -356,4 +354,3 @@ output$plot <- renderPlot({
     labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
 })
 ```
-
