@@ -107,29 +107,6 @@ output$plot1 <- renderPlot({ggplot(df, aes(x = trip_distance, y = fare_amount)) 
 
 ```
 
-# Trip Time Vs. Fare Amount by RatecodeID {style="font-size: 24px;"}
-
-```{r}
-#| panel: fill
-plotOutput('plot2')
-```
-
-```{r, fig.align='left', fig.width=13, fig.height=9}
-#| context: server
-library(ggplot2)
-# For Trip Time vs. Fare Amount
-
-output$plot2 <- renderPlot({ggplot(df, aes(x = trip_time, y = fare_amount)) +
-  geom_point(aes(color = trip_time), alpha = 0.5) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  
-  facet_wrap(~ RatecodeID, scales = "free") +
-  labs(title = "Trip Time vs. Fare Amount by RatecodeID",
-       x = "Trip Time (minutes)",
-       y = "Fare Amount ($)") +
-  theme_minimal() +
-  theme(legend.position = "none")})
-```
-
 # Density Plot of Pick up and Drop off location {style="font-size: 20px;"}
 ```{r}
 #| panel: fill
@@ -355,7 +332,6 @@ plotOutput('plot11', height = "250px")
 
 ```{r, results = 'hide'}
 #| context: server 
-# Assuming 'df' has the columns 'trip_distance' and 'fare_amount'
 x <- df$trip_distance
 y <- df$fare_amount
 
@@ -375,7 +351,6 @@ output$plot10 <- renderPlot({ggplot(df, aes(x = fitted_values, y = residuals)) +
          y = "Residuals") +
     theme_minimal()})
 ```
-::: {.fragment .fade-in-then-semi-out}
 
 
 ```{r}
