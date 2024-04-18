@@ -1,6 +1,6 @@
 ---
 title: "Unveiling NYC Taxi Patterns - Group 13 Final Project"
-author: "Ryan Gan, Alicia Garcia, Alan Yang, Kyle Zeng"
+author: "Ryan Gan, Alicia Garza, Alan Yang, Kyle Zeng"
 date: '4/18/2024'
 format:
   revealjs: 
@@ -201,7 +201,7 @@ hist(trip_time,main = "Histogram of Trip Time",
 
 # Secondary Dataset - Central Park Weather {style="font-size: 24px;"}
 
-```{r, echo = false}
+```{r, echo = FALSE, results = 'hide'}
 df_weather <- read.csv("NYC_Central_Park_weather_1869-2022.csv")
 df_weather <- df_weather %>% filter(
   year(DATE) == 2021,
