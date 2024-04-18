@@ -108,6 +108,7 @@ output$plot1 <- renderPlot({ggplot(df, aes(x = trip_distance, y = fare_amount)) 
 ```
 
 # Density Plot of Pick up and Drop off location {style="font-size: 20px;"}
+
 ```{r}
 #| panel: fill
 plotOutput('plot3')
@@ -136,6 +137,7 @@ legend("topright", # Position of the legend within the plot area
 ```
 
 # Number of Rides Per Day {style="font-size: 20px;"}
+
 ```{r}
 #| panel: fill
 plotOutput('plot4')
@@ -160,6 +162,7 @@ output$plot4 <- renderPlot({plot(daily_counts$Count, type = "l", xaxt = "n", yli
 ```
 
 # Daily Total Fare Amount {style="font-size: 24px;"}
+
 ```{r}
 #| panel: fill
 plotOutput('plot5')
@@ -204,6 +207,7 @@ output$plot6 <- renderPlot({ggplot(pickup_heatmap_data, aes(x = pickup_hour, y =
 ```
 
 # Histogram of Trip Time {style="font-size: 24px;"}
+
 ```{r}
 #| panel: fill
 plotOutput('plot7')
@@ -216,7 +220,9 @@ trip_time <- df$trip_time[df$trip_time < 100]
 output$plot7 <- renderPlot({hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")})
 ```
-# Secondary Dataset - Central Park Weather 
+
+# Secondary Dataset - Central Park Weather
+
 ```{r}
 #| panel: fill
 plotOutput('plot8')
@@ -247,7 +253,8 @@ ggplot(merged_df, aes(x = PRCP, y = count)) +
   theme_minimal()})
 ```
 
-# Secondary Dataset - Central Park Weather 
+# Secondary Dataset - Central Park Weather
+
 ```{r}
 #| panel: fill
 plotOutput('plot9')
@@ -324,6 +331,7 @@ print(summary_residuals)
 print(summary_data)
 print(summary_stats)
 ```
+
 ```{r}
 #| panel: fill
 plotOutput('plot10', height = "250px")
@@ -351,7 +359,6 @@ output$plot10 <- renderPlot({ggplot(df, aes(x = fitted_values, y = residuals)) +
          y = "Residuals") +
     theme_minimal()})
 ```
-
 
 ```{r}
 #| context: server 
@@ -428,4 +435,3 @@ output$plot <- renderPlot({
 ```{r}
 on.exit(dbDisconnect(dcon), add = TRUE)
 ```
-
