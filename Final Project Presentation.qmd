@@ -72,6 +72,7 @@ sampled_indices <- sample(nrow(df), size = 100000)
 
 # Subset the DataFrame with the sampled indices
 df <- df[sampled_indices, ]
+
 ```
 
 ```{r}
@@ -387,8 +388,6 @@ output$plot11 <- renderPlot({ggqqplot(rhat,
                     title = "QQ Plot of Standardized Residuals",
                     ggtheme = theme_minimal())})
 
-# Print the plot
-dbDisconnect(dcon)
 ```
 
 
@@ -450,5 +449,8 @@ output$plot <- renderPlot({
     scale_color_viridis_c(option = "magma", name = "Hour of Day") +
     labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
 })
+```
+```{r}
+on.exit(dbDisconnect(dcon), add = TRUE)
 ```
 
