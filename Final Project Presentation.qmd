@@ -402,7 +402,7 @@ plotOutput('plot')
 ::: {style="font-size: 40%"}
 ::: {layout-ncol="3"}
 ```{r}
-selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID))
+selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID), multiple = TRUE)
 sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1)
 ```
 :::
@@ -411,31 +411,33 @@ sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1
 ```{r}
 #| context: server
 dataset <- reactive({
-  req(input$hour, input$rateCode)
-  # Filter the data based on the selected hour and rate code
+  req(input$hour, input$rateCode)  # Ensure that inputs are available
+  
+  # Filter the data based on the selected hour and rate codes
   ddf %>% 
     filter(hour(pickup_time) >= input$hour[1],
            hour(pickup_time) <= input$hour[2],
-           RatecodeID == input$rateCode)
+           RatecodeID %in% input$rateCode)  # Use %in% to handle multiple selections
 })
 
 output$plot <- renderPlot({
   df_filtered <- dataset()
   req(nrow(df_filtered) > 0)  # Ensure there is data to plot
   
-  # Adjusted plot to handle grouping correctly for geom_smooth()
-  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount)) +
-    geom_point(aes(color = fare_amount), alpha = 0.5) +  # Use color in geom_point
-    geom_smooth(method = "lm", formula = y ~ x, na.rm = TRUE, color = "blue", se = FALSE) +  # Specified color for smooth line, removed color aesthetic
-    scale_color_viridis_c(option = "magma", name = "Hour of Day") +
-    labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
+  # Adjusted plot to color by RatecodeID and add a line of best fit for each RatecodeID
+  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount, color = as.factor(RatecodeID))) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm", formula = y ~ x, aes(group = RatecodeID), se = FALSE) +  # Group by RatecodeID for multiple regression lines
+    scale_color_viridis_d(option = "plasma", name = "Rate Code ID") +  # Using discrete coloring
+    labs(title = "Dynamic Fare Analysis by Rate Code ID", x = "Distance (miles)", y = "Fare ($)") +
+    theme_minimal()
 })
 ```
 
 
-## Killer Plot Part 2 - Clock
+
 ```{r}
-#| context: server
+#| context: setup
 # Your previous code to generate gradient colors
 hours_df <- df %>%
   mutate(
@@ -480,31 +482,28 @@ hour_labels <- data.frame(
   angle = -(0:23) * 2 * pi / 24 + pi/2  # Adjust angle for clockwise rotation
 )
 
-# Define UI
-ui <- fluidPage(
-  titlePanel("Circular Plot with Hour Markers"),
-  mainPanel(
-    plotOutput("circularPlot", width = "400px", height = "400px")
-  )
-)
+```
 
-# Define server logic
-server <- function(input, output, session) {
+<div style="position: absolute; bottom: -125px; right: 50px; width: 20%;">
+```{r plot-output, echo=FALSE}
+#| panel: fill
+plotOutput('circularPlot')
+```
+
+
+```{r}
+#| context: server
   output$circularPlot <- renderPlot({
     # Create circular plot with hour markers using ggplot
     ggplot(sector_df) +
       geom_polygon(aes(x = x, y = y, fill = gradient), color = "black") +
       scale_fill_identity() +
-      geom_text(data = hour_labels, aes(x = 1.2 * cos(angle), y = 1.2 * sin(angle), label = hour), size = 4) +  # Adjust label positions
+      geom_text(data = hour_labels, aes(x = 1.2 * cos(angle), y = 1.2 * sin(angle), label = hour), size = 4) +  
       theme_void() +
       coord_fixed() +
       theme(legend.position = "none") +
-      labs(title = "Circular Plot with 24 Sectors and Hour Labels")
+      labs(title = "Price by Time of Day")
   })
-}
-
-# Run the application
-shinyApp(ui = ui, server = server)
 ```
 
 
