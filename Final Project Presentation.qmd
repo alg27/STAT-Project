@@ -402,7 +402,7 @@ plotOutput('plot')
 ::: {style="font-size: 40%"}
 ::: {layout-ncol="3"}
 ```{r}
-selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID))
+selectInput("rateCode", "Rate Code", choices = unique(df$RatecodeID), multiple = TRUE)
 sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1)
 ```
 :::
@@ -411,26 +411,101 @@ sliderInput("hour", "Hour of Day", min = 0, max = 23, value = c(6, 18), step = 1
 ```{r}
 #| context: server
 dataset <- reactive({
-  req(input$hour, input$rateCode)
-  # Filter the data based on the selected hour and rate code
+  req(input$hour, input$rateCode)  # Ensure that inputs are available
+  
+  # Filter the data based on the selected hour and rate codes
   ddf %>% 
     filter(hour(pickup_time) >= input$hour[1],
            hour(pickup_time) <= input$hour[2],
-           RatecodeID == input$rateCode)
+           RatecodeID %in% input$rateCode)  # Use %in% to handle multiple selections
 })
 
 output$plot <- renderPlot({
   df_filtered <- dataset()
   req(nrow(df_filtered) > 0)  # Ensure there is data to plot
   
-  # Adjusted plot to handle grouping correctly for geom_smooth()
-  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount)) +
-    geom_point(aes(color = fare_amount), alpha = 0.5) +  # Use color in geom_point
-    geom_smooth(method = "lm", formula = y ~ x, na.rm = TRUE, color = "blue", se = FALSE) +  # Specified color for smooth line, removed color aesthetic
-    scale_color_viridis_c(option = "magma", name = "Hour of Day") +
-    labs(title = "Dynamic Fare Analysis", x = "Distance (miles)", y = "Fare ($)")
+  # Adjusted plot to color by RatecodeID and add a line of best fit for each RatecodeID
+  ggplot(df_filtered, aes(x = trip_distance, y = fare_amount, color = as.factor(RatecodeID))) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm", formula = y ~ x, aes(group = RatecodeID), se = FALSE) +  # Group by RatecodeID for multiple regression lines
+    scale_color_viridis_d(option = "plasma", name = "Rate Code ID") +  # Using discrete coloring
+    labs(title = "Dynamic Fare Analysis by Rate Code ID", x = "Distance (miles)", y = "Fare ($)") +
+    theme_minimal()
 })
 ```
+
+
+
+```{r}
+#| context: setup
+# Your previous code to generate gradient colors
+hours_df <- df %>%
+  mutate(
+    date = as.POSIXct(pickup_time, origin = "1970-01-01", tz = "UTC"),
+    hour = hour(date))
+
+avg_fare_price <- hours_df %>%
+  group_by(hour) %>% 
+  summarize(avg_fare_by_hour = mean(fare_amount))
+
+new_row <- data.frame(hour = 0, avg_fare_by_hour = 13)
+
+avg_fare_price <- rbind(new_row, avg_fare_price)
+
+normalized_fare <- (avg_fare_price$avg_fare_by_hour - min(avg_fare_price$avg_fare_by_hour)) / 
+                       (max(avg_fare_price$avg_fare_by_hour) - min(avg_fare_price$avg_fare_by_hour))
+
+gradient_colors <- colorRamp(c("green", "red"))(normalized_fare)
+
+to_rgb <- function(row) {
+  return(rgb(row[1], row[2], row[3], maxColorValue = 255))
+}
+gradient_rgb <- apply(gradient_colors, 1, to_rgb)
+
+# Create a data frame to store vertices and gradients for each sector
+sector_data <- lapply(0:23, function(i) {
+  start_angle <- i * 2 * pi / 24
+  end_angle <- (i + 1) * 2 * pi / 24
+  x <- c(0, sin(seq(start_angle, end_angle, length.out = 25)), 0)
+  y <- c(0, cos(seq(start_angle, end_angle, length.out = 25)), 0)
+  gradient <- gradient_rgb[i + 1]  # Indexing starts from 1
+  angle <- (start_angle + end_angle) / 2  # Midpoint of sector angle
+  data.frame(x = x, y = y, gradient = gradient, angle = angle)
+})
+
+# Combine data frames for all sectors
+sector_df <- do.call(rbind, sector_data)
+
+# Create data frame for hour labels
+hour_labels <- data.frame(
+  hour = 0:23,
+  angle = -(0:23) * 2 * pi / 24 + pi/2  # Adjust angle for clockwise rotation
+)
+
+```
+
+<div style="position: absolute; bottom: -125px; right: 50px; width: 20%;">
+```{r plot-output, echo=FALSE}
+#| panel: fill
+plotOutput('circularPlot')
+```
+
+
+```{r}
+#| context: server
+  output$circularPlot <- renderPlot({
+    # Create circular plot with hour markers using ggplot
+    ggplot(sector_df) +
+      geom_polygon(aes(x = x, y = y, fill = gradient), color = "black") +
+      scale_fill_identity() +
+      geom_text(data = hour_labels, aes(x = 1.2 * cos(angle), y = 1.2 * sin(angle), label = hour), size = 4) +  
+      theme_void() +
+      coord_fixed() +
+      theme(legend.position = "none") +
+      labs(title = "Price by Time of Day")
+  })
+```
+
 
 ```{r}
 on.exit(dbDisconnect(dcon), add = TRUE)
