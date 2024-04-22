@@ -1,1 +1,610 @@
+---
+title: "Unveiling NYC Taxi Patterns"
+author: "Alan, Alicia, Ryan, Kyle"
+date: "22 April 2024"
+format:
+  pdf:
+    documentclass: article
+    fontsize: 10pt
+    geometry: margin=1in
+    includes:
+      in_header: header.tex
+editor: visual
+---
+
+# Introduction
+
+**Group Members**: Alan, Alicia, Ryan, Kyle
+
+## Project Overview
+
+New York City, renowned for its hustle and bustle, has a unique transportation landscape characterized by its efficient Taxi service. Our statistical analysis project explores a dataset of Taxi cab ride data from January to March 2021, aiming to uncover patterns in trip distances, fare prices, and more.
+
+New York, the city that never sleeps, has a densely populated city, meaning not many people can own cars. However, if people need to travel from point A to point B in a hurry, they can hail a Taxi.
+
+Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
+
+
+## Data Overview
+
+The dataset consists of 18 columns and approximately 30 million rows, representing individual taxi trips. Notable columns include pickup and dropoff times, trip distance, and fare amount, among others.
+
+# Methodology
+
+## Data Cleaning
+
+Data cleaning steps included removing records outside the specified timeframe, filtering out trips under 10 seconds or with negative fees, and excluding trips lacking essential information like pickup or dropoff times.
+
+# Analysis
+
+## Plot1:
+This is the main relationship we really looked at. Fare V Distance Traveled
+We are examining the relationship between the trip distance and the amount the person got charged for their fare using a scatterplot. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.This suggests that there is a positive correlation between trip distance and fare amount. In other words, longer trips tend to result in higher fare amounts. The scatter plot provides a quick and intuitive way to observe the trend and relationship between these two variables.
+
+## Plot2:
+Plot2 is a scatterplot that is depicting the relationship between taxi trip duration and total amount charged. Each point on the plot represents a specific trip, with the x-coordinate indicating the duration and the y-coordinate showing the total amount charged. The use of blue color enhances visibility. Analyzing the plot can reveal insights into how total charges vary with trip duration, identifying patterns or outliers in the dataset. This visualization is valuable for exploring underlying patterns in taxi trip data and potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
+
+## Plot3:
+Plot3 is a violin plot used to visually compare fare distributions across different rate codes. This plot is essential for identifying patterns, outliers, and skewness in fare amounts. The inclusion of median points and labels highlights central tendencies within each rate code. Beyond analysis, the plot serves as a clear communication tool, aiding stakeholders in making informed decisions related to pricing strategies and operational planning based on observed fare variations. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
+
+We know that: Standard Rate: The most common fare rate, applied to most metered trips within the city. JFK: A flat fare for trips between JFK Airport and Manhattan. This rate is set to offer a predictable fare for travelers to and from this major airport. Newark: A special fare rate for trips to Newark Liberty International Airport, which may include surcharges or a flat rate, depending on the jurisdictional agreements and regulations. Nassau or Westchester: These rates apply to trips that go beyond the city limits to Nassau County or Westchester County. Fares might be metered at a different rate or negotiated based on the distance. Negotiated Fare: Fares that are not determined by the meter but are agreed upon by the driver and passenger before the trip begins. This might apply to trips outside the typical service areas or under special circumstances. Group Ride: Some jurisdictions may allow taxis to offer shared rides at a discounted rate. The specifics can vary, including how fares are split among passengers. Other Special Rates/ Unknown: Depending on the local regulations, there might be additional special rates for trips to other specific destinations or under certain conditions (e.g., rush hour rates, holiday rates, etc.). This code might be used for trips where the applicable rate code was not properly recorded or is otherwise unspecified.
+
+We were curious to know why the rate code had such a wide range. Through our research, we found out that Nassau/Westchester's populations were much more wealthy, explaining why some of the fare amounts were so much higher.
+
+This plot was extremely important for understanding more about our killer plot
+
+
+## Plot 4:
+Plot4 is a density plot with overlaid lines for both pick-up and drop-off locations, making it easy to compare their distributions. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the drop off locations.The density plot provides a visual representation of spatial patterns, offering actionable insights for businesses, city planners, and transportation services to make informed decisions and optimize their operations.
+
+We were wondering what these humps came from, and we figured out that those areas are airports/other high areas of interest.
+
+## Plot5:
+Plot5 plot shows the total number of rides per day between Jan and Mar. The purpose of this code is to visualize the trend in the number of taxi rides per day in New York City between January and March. We have observed a consistent dip in the number of rides around every 6 days, especially on Sundays, suggesting a pattern of reduced taxi usage on weekends. This implies that people tend to stay at home or travel less on Sundays in New York during the specified time period.
+
+## Plot6:
+Plot6 is a time series plot using ggplot2 to visualize the daily total fare amounts. It first aggregates the data by day, calculating the sum of fare amounts for each day. The resulting plot depicts the trend in total fare amounts over time, with dates on the x-axis and total fare amounts on the y-axis.This visualization is valuable for discerning patterns, trends, and potential correlations with external events or holidays, offering insights into the overall performance of a transportation system.
+
+## Plot7:
+Plot7 is a heatmap that can illustrate the concentration of taxi pickups across different times of the day and days of the week. The resulting plot helps in identifying patterns and peak usage periods for taxi services. It can be utilized by taxi service providers for operational optimization, service planning, and targeted marketing based on observed patterns in pickup data.
+
+## Plot8:
+Integrating the insights from the daily number of rides, total fare amounts, and the heatmap of taxi pickups unveils a multifaceted narrative of taxi service dynamics in New York City. The synchronization between the volume of rides and fare accumulation suggests a direct correlation between passenger demand and revenue generation, underpinned by the predictable yet complex patterns of urban mobility. Meanwhile, the heatmap adds depth to this story, highlighting the temporal and geographical nuances of taxi usage. We see a drop in demand for taxi pickup services as a pattern every 7 days. This is also supported by the matching pattern seen in the other graphs. The heatmap then helps provide further insight in which the count of pickups on Sundays are significantly lower than other week days.
+
+In addition, we see a sharp decrease in fare and pickup amounts in late January and early February. It can be inferred this decrease also occurred due to a sharp decrease in temperature in New York.
+
+Plot8 depicts the matching correlations between fare amount and amount of pickups further enriching understandings of the taxi service landscape.
+
+## Plot9:
+Plot9 is a bar chart, illustrating the distribution of rides based on the number of passengers, offering insights into common group sizes for travel. Understanding passenger patterns aids in the development of targeted marketing strategies, optimizing user experience, and shaping business policies. Lastly, it offers a data-driven approach to enhance overall service efficiency, resource allocation, and user satisfaction within the transportation industry.
+
+## Plot10:
+Displayed in plot10 is the relationship between tip amounts and total amounts from the dataset. The x-axis represents the tip amounts, and the y-axis represents the total amounts. We can observe a positive correlation corroborating an intuitive relationship that is represented between the total amount of the fare and the tip given. It shows how our data can also be affected
+
+## Plot11:
+This plot visualizes the distribution of trip times for rides, focusing on those with a duration of less than 100 minutes. The resulting histogram provides insights into the frequency or count of rides across different trip time intervals. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. The data shows a right-skewed distribution suggesting that most rides have relatively short durations (between 5 and 10 minutes), with fewer rides taking longer durations. This aligns with the common expectation that taxi rides are typically short-distance travels. The truncation at 100 minutes implies a focus on the majority of rides, excluding potential outliers with very long durations.
+
+## Plot12:
+The scatter plot below visually represents the relationship between mean fare amounts and the number of passengers in taxi trips. The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.By analyzing trends and patterns, this visualization aids in understanding how pricing varies with passenger count. The importance lies in its potential impact on decision-making within the taxi industry, influencing pricing strategies, resource allocation, and overall operational efficiency. Additionally, insights from this analysis can contribute to enhancing customer experience and informing policy and regulation decisions, making it a valuable tool for stakeholders and policymakers alike.
+
+## Plot13 & Plot14
+The analysis of trip time against fare amount typically reveals a positive correlation: as trip time increases, so does the fare amount. This relationship is expected since longer trips, in terms of time, often cover greater distances or encounter traffic conditions that extend the journey, thereby increasing the fare. However, the strength of this relationship can vary significantly across different RateCodeIDs.
+
+For example, standard rates (RateCodeID 1) usually show a linear increase in fare with time, reflecting a straightforward time-distance-cost relationship. In contrast, flat rates to specific destinations (such as RateCodeID 2 for JFK airport trips) may show less variability in fare with time since the fare is predetermined, irrespective of trip duration. This distinction highlights how different pricing structures (captured by RateCodeID) can affect the fare-time relationship.
+
+Similarly, the relationship between trip distance and fare amount is generally positive, indicating that longer trips cost more. This correlation is a fundamental aspect of fare calculation, typically based on a metered rate per mile or kilometer. However, the influence of RateCodeID on this relationship underscores the complexity of fare calculation beyond mere distance traveled.
+
+For instance, trips under standard metered rates (RateCodeID 1) display a clear linear relationship between distance and fare, as expected. However, for trips with special rate codes, such as those to airports (RateCodeID 2 for JFK, RateCodeID 3 for Newark), the distance-fare relationship might not follow the standard linear pattern due to flat-rate pricing. These special rate codes introduce variations in the distance-fare correlation that are not present under standard metered fares.
+
+There is only one point with a RateCodeID of 6, signaling a group ride. This is just a ride where you share with strangers. Out of the taxi cab rides we took, only one was a group ride. This is most likely because group rides are very difficult to get in a taxi. These can be observed in tables
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+options(bitmapType='cairo')
+x11(type='cairo')
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(RSQLite)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# pickup_datetime <- "2021-01-01 00:30:10"
+# pickup_datetime_parsed <- as.POSIXct(pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
+# 
+# # Convert to the desired format "mm/dd/yyyy hh:mm:ss AM/PM"
+# pickup_datetime_formatted <- format(pickup_datetime_parsed, "%m/%d/%Y %I:%M:%S %p")
+# 
+# pickup_datetime_formatted
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# Make database
+# df <- read.csv("jan_to_mar_taxi_2021.csv")
+# df$tpep_pickup_datetime <- as.POSIXct(df$tpep_pickup_datetime, format = "%Y-%m-%d %H:%M:%S")
+# df$tpep_pickup_datetime_formatted <- format(df$tpep_pickup_datetime, "%m/%d/%Y %I:%M:%S %p")
+# 
+# df <- df %>% select(-tpep_pickup_datetime)
+# df <- df %>% rename(tpep_pickup_datetime = tpep_pickup_datetime_formatted)
+# first_col_name <- names(df)[1]
+# df <- df %>% select({{first_col_name}}, tpep_pickup_datetime, everything())
+# 
+# df$tpep_dropoff_datetime <- as.POSIXct(df$tpep_dropoff_datetime, format = "%m/%d/%Y %I:%M:%S %p")
+# df$tpep_dropoff_datetime <- format(df$tpep_dropoff_datetime, "%m/%d/%Y %I:%M:%S %p")
+# 
+# df <- df %>%
+#   mutate(
+#     pickup_time = mdy_hms(tpep_pickup_datetime),
+#     dropoff_time = mdy_hms(tpep_dropoff_datetime),
+#     trip_time = as.numeric(difftime(dropoff_time, pickup_time, units = "mins")),
+#     speed = trip_distance / (trip_time/ 60), # Speed in miles per hour
+#     fare_per_mile = if_else(trip_distance > 0, fare_amount / trip_distance, NA_real_) # Handle division by zero
+#   ) %>%
+#   #filter stuff
+#   filter(
+#     month(dropoff_time) < 4,
+#     year(dropoff_time) == 2021,
+#     hour(dropoff_time) != 0 & minute(dropoff_time) != 0 & second(dropoff_time) != 0,
+#     hour(pickup_time) != 0 & minute(pickup_time) != 0 & second(pickup_time) != 0,
+#     !is.na(pickup_time),
+#     !is.na(dropoff_time),
+#     year(pickup_time) == 2021,
+#     !is.na(fare_per_mile),
+#     fare_per_mile < 50,
+#     speed <= 120,
+#     speed >= .15,
+#     fare_amount > 0,
+#     #trip must be longer than 10 seconds
+#     trip_time > (10/60),
+#     trip_time < 600,
+#     extra >= 0,
+#     mta_tax >= 0,
+#     tip_amount >= 0,
+#     tolls_amount >= 0,
+#     improvement_surcharge >= 0,
+#     congestion_surcharge >= 0,
+#     total_amount >= 0,
+#     passenger_count < 20,
+#     passenger_count > 0,
+#     RatecodeID < 100
+#   )
+# 
+# # Create the table in SQLite database
+# dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
+# dbWriteTable(dcon, "jan_to_mar_taxi_2021", df, overwrite = TRUE, row.names = FALSE)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# Connect to the SQLite database
+dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+#Disconnect DB (Don't use all the time)
+#dbDisconnect(dcon)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+dbListTables(dcon)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+query <- "SELECT * FROM jan_to_mar_taxi_2021 WHERE trip_distance < 100;"
+df <- dbGetQuery(dcon, query)
+```
+
+```{r, echo = FALSE}
+set.seed(24246452)
+sampled_indices <- sample(nrow(df), size = 100000)
+
+# Subset the DataFrame with the sampled indices
+df <- df[sampled_indices, ]
+```
+
+# Killer Plot: Fare Price vs Distance Traveled, RatecodeID, Time of Day
+
+[Plz fill in] - Kyle
+
+# Advanced Questions
+
+Below are a few questions that we have answered and believe are crucial insights that we discovered throughout are work, data wrangling and plot making.
+
+# Question 1: Outlier Explanation
+
+What factors contribute to the decline in ridership observed in late January?
+
+The decline in ridership observed in late January could be attributed to external factors such as sudden weather changes, particularly a freeze, which may not be explicitly captured in the dataset. Severe weather conditions can significantly impact transportation services, leading to a decrease in taxi usage as people opt for alternative modes of transportation or choose to stay indoors.
+
+# Question 2: Effect of Pickup and Dropoff Locations on Fare
+
+How do the pickup and dropoff locations (PULocationID and DOLocationID) affect the fare amount (fare_amount)? Below is a table that shows PULocationID and DOLocationID in relation to fare amount:
+
+```{r, echo = FALSE}
+# Summarize the effect of pickup and dropoff locations on fare amount
+pickup_dropoff_effect <- df %>%
+  group_by(PULocationID, DOLocationID) %>%
+  summarise(avg_fare_amount = mean(fare_amount),
+            total_trips = n(),
+            .groups = 'drop')
+pickup_dropoff_effect
+```
+
+# Question 3: Patterns in Taxi Usage Over Time
+
+How does taxi usage, in terms of number of trips and total amount charged (total_amount), vary over different times of the day and days of the week? All possible distributions would be as followed:
+
+```{r, echo = FALSE}
+taxi_usage <- df %>%
+  mutate(hour_of_day = hour(pickup_time),
+         day_of_week = wday(pickup_time, label = TRUE)) %>%
+  group_by(hour_of_day, day_of_week) %>%
+  summarise(num_trips = n(),
+            total_amount = sum(total_amount), .groups = 'drop')
+taxi_usage
+```
+
+# Question 4: Price Prediction
+
+Can total fares be predicted by distance, theoretical time, and ratecodeIDs? Specifically for trips with distance 3.5 miles, 4.2 miles, and 2.8 miles, 20 minutes, 30 minutes, and 19 minutes, ratecodeIDs 1, 2, and 1 respectively.
+
+```{r, echo = FALSE}
+# Price Prediction
+price_prediction <- df %>%
+  select(total_amount, trip_distance, trip_time, RatecodeID) %>%
+  na.omit() %>%
+  mutate(RatecodeID = as.factor(RatecodeID)) %>%
+  lm(total_amount ~ trip_distance + trip_time + RatecodeID, data = .)
+
+# Summary of the model
+summary(price_prediction)
+
+# Prediction for a new dataset (replace new_data with your actual dataset)
+new_data <- data.frame(trip_distance = c(3.5, 4.2, 2.8),
+                       trip_time = c(20, 30, 19),
+                       RatecodeID = factor(c(1, 2, 1)))
+print("Predictions:")
+# Predict total fares for new data
+predictions <- predict(price_prediction, newdata = new_data)
+predictions
+```
+
+# Statistical Modeling
+
+We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot does not look gaussian, as the upper and lower theoretical quantiles do not follow the sample quantiles.
+
+```{r, echo = FALSE, results = 'hide'}
+x <- df$trip_distance
+y <- df$fare_amount
+
+model <- lm(y ~ x)
+
+# Extract coefficients and related statistics
+coefficients <- coef(model)
+standard_errors <- summary(model)$coefficients[, "Std. Error"]
+t_values <- coefficients / standard_errors
+p_values <- 2 * pt(abs(t_values), df = df.residual(model), lower.tail = FALSE)
+
+# Extract additional statistics from the model object
+residuals <- summary(model)$residuals
+r_squared <- summary(model)$r.squared
+adj_r_squared <- summary(model)$adj.r.squared
+f_value <- summary(model)$fstatistic[1]
+f_p_value <- summary(model)$fstatistic[2]
+aic <- AIC(model)
+bic <- BIC(model)
+
+# Create a data frame to organize all the information
+summary_data <- data.frame(
+  coefficient = coefficients,
+  std_error = standard_errors,
+  t_value = t_values,
+  p_value = p_values
+)
+
+# Additional statistics
+summary_stats <- data.frame(
+  r_squared = r_squared,
+  adj_r_squared = adj_r_squared,
+  f_value = f_value,
+  f_p_value = f_p_value,
+  aic = aic,
+  bic = bic
+)
+
+quartiles <- quantile(residuals, probs = c(0.25, 0.5, 0.75))
+
+# Residual statistics
+summary_residuals <- data.frame(
+  mean = mean(residuals),
+  sd = sd(residuals),
+  min = min(residuals),
+  Q1 = quartiles[1],
+  median = median(residuals),
+  Q3 = quartiles[3],
+  max = max(residuals)
+)
+rownames(summary_residuals) <- "Data"
+
+print(summary_residuals)
+print(summary_data)
+print(summary_stats)
+```
+
+There is an outlier in the yhat below of greater than 400, showing that someone in the taxi cab has had a ride that had a much mor expensive fare amount than usual.
+
+```{r, echo = FALSE}
+yhat = fitted(model)
+ehat = residuals(model)
+plot(yhat, ehat)
+abline(h=0)
+```
+```{r, echo = FALSE}
+rhat = rstandard(model)
+qqnorm(rhat)
+qqline(rhat)
+```
+# Conclusion
+
+[Plz fill in] - Kyle
+
+# Plots/Tables Appendex
+
+## Plots
+
+# Plot 1 Trip Distance vs Fare Amount
+
+```{r, echo = FALSE}
+# Fit a linear model
+lm_model <- lm(fare_amount ~ trip_distance, data = df)
+
+# Extract coefficients
+intercept <- round(coef(lm_model)[1], 2)
+slope <- round(coef(lm_model)[2], 2)
+
+# Construct the equation string
+equation <- paste("y = ", intercept, " + ", slope, "*x", sep = "")
+
+# Create the plot with ggplot2
+ggplot(df, aes(x = trip_distance, y = fare_amount)) +
+  geom_point(aes(color = trip_distance), alpha = 0.5) +  # Plot data points
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  # Linear regression line without standard error
+  geom_text(x = Inf, y = Inf, label = equation, hjust = 1.1, vjust = 2, size = 5, color = "red") +  # Display the equation
+  labs(title = "Trip Distance vs. Fare Amount",
+       x = "Trip Distance (miles)",
+       y = "Fare Amount ($)",
+       caption = paste("Data: NYC Taxi Rides. Linear Model:", equation)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+# Plot 2 Scatterplot of Trip Time and Total Amount
+
+
+```{r, echo = FALSE}
+# Fit a linear model
+lm_model <- lm(total_amount ~ trip_time, data = df)
+
+# Extract coefficients
+intercept <- round(coef(lm_model)[1], 2)
+slope <- round(coef(lm_model)[2], 2)
+
+# Construct the equation string
+equation <- paste("y =", intercept, ifelse(slope >= 0, "+", "-"), abs(slope), "*x")
+
+# Plot with ggplot2, including the linear regression line and the equation
+ggplot(df, aes(x = trip_time, y = total_amount)) +
+  geom_point(color = "deepskyblue3", alpha = 0.5) +  # Plot data points with some transparency
+  geom_smooth(method = "lm", formula = y ~ x, color = "red", se = FALSE) +  # Add a linear regression line without standard error
+  annotate("text", x = Inf, y = Inf, label = equation, hjust = 1.1, vjust = 2, color = "red", size = 5) +  # Display the equation
+  labs(title = "Total Amount Over Trip Duration",
+       x = "Trip Duration (minutes)",
+       y = "Total Amount ($)",
+       caption = paste("Data: NYC Taxi Rides. Linear Model:", equation)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+# Plot 3 Violin Plot of Fare Amount by Rate Code
+
+```{r, echo = FALSE, fig.width=12}
+plt <- ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
+  geom_violin(trim = FALSE, fill = 'skyblue', color = 'blue', alpha = 0.7) +
+  stat_summary(fun = median, geom = "point", shape = 23, size = 3, color = "darkred", fill = "yellow") +
+  stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), 2)), vjust = -1, color = "darkgreen") +
+  labs(title = "Violin Plot of Fare Amount by Rate Code",
+       x = "Rate Code ID",
+       y = "Fare Amount ($)") +
+  theme_minimal()
+
+suppressWarnings(print(plt))
+```
+
+
+# Plot 4 Density of Pick up and Drop off location
+
+```{r, echo = FALSE}
+# Density plot of pick up and drop off locations
+plot(density(df$PULocationID), 
+     main = "Density Plot of Pick Up and Drop off Location", 
+     xlab = "Location ID", 
+     ylab = "Density", 
+     ylim = c(0, 0.04), 
+     col = "red")
+lines(density(df$PULocationID), 
+      col = "red", 
+      lwd = 2)
+par(new = TRUE)
+plot(density(df$DOLocationID), main = "", xlab = "", ylab = "", ylim = c(0, 0.04), col = "blue")
+lines(density(df$DOLocationID), col = "blue", lwd = 2)
+legend("topright", # Position of the legend within the plot area
+       legend = c("Pickup Location", "Dropoff Location"), # Text for the legend
+       col = c("red", "blue"), # Colors for the legend keys
+       lwd = 2) # Line width for the legend keys
+```
+
+# Plot 5 Line Graph of Number of Rides Per Day
+
+
+```{r, echo = FALSE}
+# Line chart of month and number of taxi trips
+# Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
+df$pickup_time <- as.POSIXct(df$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
+df$day <- format(df$pickup_time, "%Y-%m-%d")
+
+# Sort the data by day to ensure it's in chronological order
+daily_counts <- aggregate(x = list(Count = rep(1, nrow(df))), by = list(Day = df$day), FUN = sum)
+# Plot
+max_count <- max(daily_counts$Count)
+
+# Plotting with y-axis starting at 0
+plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = "Number of Rides per day", xlab = "Day", ylab = "Number of Rides"); axis(1, at = 1:length(daily_counts$Day), labels = daily_counts$Month)
+
+```
+
+# Plot 6 Daily Total Fare Amount
+
+
+```{r, echo = FALSE}
+# Aggregate data for total daily fare
+daily_fare_data <- df %>%
+  group_by(day) %>%
+  summarise(TotalFare = sum(fare_amount), .groups = 'drop')
+ggplot(daily_fare_data, aes(x = as.Date(day), y = TotalFare)) +
+  geom_line(color = "darkred") +
+  labs(title = "Daily Total Fare Amount", x = "Date", y = "Total Fare Amount ($)") +
+  theme_minimal()
+```
+
+# Plot 7 Heat Map of Taxi Pickups by Day of Week and Hour
+
+```{r, echo = FALSE}
+# Convert pickup_time to day of the week and hour
+df$pickup_day <- weekdays(df$pickup_time)
+df$pickup_hour <- hour(df$pickup_time)
+# Aggregate data for heatmap
+pickup_heatmap_data <- df %>%
+  group_by(pickup_day, pickup_hour) %>%
+  summarise(Count = n(), .groups = 'drop')
+ggplot(pickup_heatmap_data, aes(x = pickup_hour, y = pickup_day, fill = Count)) +
+  geom_tile() +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(title = "Heatmap of Taxi Pickups by Day of Week and Hour", x = "Hour of the Day", y = "Day of the Week") +
+  theme_minimal()
+```
+
+# Plot 8 Analysis on plots 5, 6 and 7
+
+```{r, echo=FALSE}
+# Assuming df has been pre-processed as before
+df$day <- format(df$pickup_time, "%Y-%m-%d")
+
+# Aggregate for number of rides per day
+daily_counts <- df %>%
+  group_by(day) %>%
+  summarise(NumberOfRides = n(), .groups = 'drop')
+
+# Aggregate for total daily fare
+daily_fare_data <- df %>%
+  group_by(day) %>%
+  summarise(TotalFare = sum(fare_amount), .groups = 'drop')
+
+# Combine both datasets by day
+combined_data <- merge(daily_counts, daily_fare_data, by = "day")
+
+# Create the plot
+ggplot() +
+  geom_line(data = combined_data, aes(x = as.Date(day), y = NumberOfRides, colour = "Number of Rides"), linewidth = 1) +
+  geom_line(data = combined_data, aes(x = as.Date(day), y = TotalFare, colour = "Total Fare Amount"), linewidth = 1) +
+  scale_y_continuous(name = "Number of Rides", sec.axis = sec_axis(~./max(combined_data$TotalFare) * max(combined_data$NumberOfRides), name = "Total Fare Amount ($)")) +
+  labs(title = "Daily Number of Rides and Total Fare Amount",
+       x = "Date",
+       y = "Number of Rides") +
+  theme_minimal() +
+  scale_colour_manual("", 
+                      breaks = c("Number of Rides", "Total Fare Amount"),
+                      values = c("Number of Rides" = "blue", "Total Fare Amount" = "red"))
+
+```
+
+# Plot 9 Number of Rides by Passenger Count
+
+```{r, echo = FALSE}
+# Aggregate data by passenger count
+passenger_count_data <- df %>%
+  group_by(passenger_count) %>%
+  summarise(Rides = n(), .groups = 'drop')
+ggplot(passenger_count_data, aes(x = factor(passenger_count), y = Rides)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Number of Rides by Passenger Count", x = "Passenger Count", y = "Number of Rides") +
+  theme_minimal()
+```
+
+# Plot 10 Relationship Between Tip and Total Amount
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = tip_amount, y = total_amount)) +
+  geom_point(color = "purple") +
+  labs(title = "Scatter Plot of Tip Amounts vs. Total Amounts", 
+       x = "Tip Amount ($)", 
+       y = "Total Amount ($)") + 
+  theme_minimal()
+```
+
+# Plot 11 Histogram of Trip Time
+
+```{r, echo = FALSE}
+# Histogram of Trip Times less than 100 minutes for ease of viewing
+trip_time <- df$trip_time[df$trip_time < 100]
+hist(trip_time,main = "Histogram of Trip Time",
+     xlab = "Trip Time")
+```
+
+
+# Plot 12 Scatter plot between mean fare amount and passenger count
+
+```{r, echo=FALSE}
+# Calculate the mean fare amount for each count of passengers
+mean_fare <- df %>%
+  group_by(passenger_count) %>%
+  summarize(mean_fare_amount = mean(fare_amount))
+# Scatter plot of mean fare amount vs. passenger count
+ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
+  geom_point(color = "darkslateblue") +
+  geom_text(aes(label = round(mean_fare_amount, 2)), vjust = -0.5, color = "darkseagreen4") +
+  labs(title = "Mean Fare Amount vs. Passenger Count", x = "Passenger Count", y = "Mean Fare Amount ($)") +
+  scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
+```
+# Plot13 
+
+```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
+# For Trip Distance vs. Fare Amount
+ggplot(df, aes(x = trip_distance, y = fare_amount)) +
+  geom_point(aes(color = trip_distance), alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  
+  facet_wrap(~ RatecodeID, scales = "free") +
+  labs(title = "Trip Distance vs. Fare Amount by RatecodeID",
+       x = "Trip Distance (miles)",
+       y = "Fare Amount ($)") +
+  theme_minimal() + 
+  theme(legend.position = "none")
+```
+# Plot14
+
+
+```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
+# For Trip Time vs. Fare Amount
+ggplot(df, aes(x = trip_time, y = fare_amount)) +
+  geom_point(aes(color = trip_time), alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue") +  
+  facet_wrap(~ RatecodeID, scales = "free") +
+  labs(title = "Trip Time vs. Fare Amount by RatecodeID",
+       x = "Trip Time (minutes)",
+       y = "Fare Amount ($)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
 
