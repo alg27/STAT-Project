@@ -35,7 +35,7 @@ The dataset consists of 18 columns and approximately 30 million rows, representi
 
 Data cleaning steps included removing records outside the specified timeframe, filtering out trips under 10 seconds or with negative fees, and excluding trips lacking essential information like pickup or dropoff times.
 
-# Analysis
+# Analysis/Commentary and Interpretation
 
 ## Plot1:
 This is the main relationship we really looked at. Fare V Distance Traveled
@@ -348,7 +348,23 @@ qqline(rhat)
 ```
 # Conclusion
 
-[Plz fill in] - Kyle
+Our comprehensive analysis of NYC taxi patterns from January to March 2021 has provided valuable insights into the dynamics of urban transportation within the city. Through meticulous data cleaning, rigorous statistical analysis, and thoughtful interpretation, we have identified several key findings that not only highlight the behavior of taxi usage but also suggest implications for city planners, taxi operators, and policy makers.
+
+## Key Takeaways
+Distance and Fare Relationship: We observed a strong linear relationship between trip distance and fare amount, confirming the expected correlation where longer trips result in higher fares. This foundational understanding assists in fare estimation and regulation, ensuring fair pricing for consumers and equitable compensation for taxi operators.
+
+Temporal Patterns in Taxi Usage: Our analysis revealed distinct patterns in taxi usage throughout the week, with a notable decrease in ride counts on Sundays. This pattern suggests a lower demand for taxis during weekends, possibly due to reduced work-related commuting. Understanding these patterns can help in optimizing taxi fleet management and operational efficiency.
+
+Impact of External Events: We also noted significant dips in taxi usage correlating with external events such as severe weather conditions. This observation underlines the sensitivity of transportation services to environmental factors, which could be crucial for disaster preparedness and emergency response planning.
+
+Geographic Trends: The density plots of pickup and dropoff locations indicated that certain areas, notably major transit hubs and tourist attractions, have higher taxi activity. This data can inform urban development strategies, focusing on improving transportation infrastructure in high-demand areas to enhance accessibility and reduce congestion.
+
+Fare Structure Complexity: The examination of different fare rate codes revealed the complexity of the fare structure in NYC taxis. Special rates for airports and negotiated fares introduce variability in pricing, which can affect customer satisfaction and predictability in travel planning.
+
+## Conclusion
+Further studies could expand on our work by integrating more diverse data sources such as ride-sharing services, public transportation logs, and traffic data to create a more holistic view of urban mobility. Additionally, exploring the impact of socio-economic factors on taxi usage patterns could yield deeper insights into the equity and accessibility of transportation services in New York City.
+
+In conclusion, our project not only sheds light on the current state of taxi usage in New York City but also provides a data-driven foundation for future enhancements in urban transportation planning and policy formulation. As the city evolves, continuous analysis such as ours will be essential in adapting to the changing needs of its residents and visitors.
 
 # Plots/Tables Appendex
 
