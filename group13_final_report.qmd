@@ -302,7 +302,7 @@ ggplot(merged_df, aes(x = SNOW, y = count)) +
 
 Below is our killer plot, which shows the fare price vs distance traveled by RateCodeID.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(grid)
 library(gridExtra)
 dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
@@ -314,11 +314,11 @@ ddf <- ddf[sampled_indices, ]
 ddf$pickup_time <- as.POSIXct(ddf$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 plot_grid <- function(data) {
   grid.newpage()
   # Define a larger margin to accommodate axis titles
-  vp <- viewport(layout = grid.layout(1, 1), width = 0.8, height = 0.8, x = 0.55, y = 0.5)
+  vp <- viewport(layout = grid.layout(1, 1), width = 0.9, height = 0.8, x = 0.55, y = 0.5)
   pushViewport(vp)
   
   # Define the range of the data
