@@ -317,12 +317,17 @@ ddf$pickup_time <- as.POSIXct(ddf$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
 ```{r}
 plot_grid <- function(data) {
   grid.newpage()
-  vp <- viewport(layout = grid.layout(1, 1))
+  # Adjust viewport to include margins
+  vp <- viewport(layout = grid.layout(1, 1), width = 0.9, height = 0.8, x = 0.5, y = 0.5)
   pushViewport(vp)
   
   # Define the range of the data
   x_range <- range(data$trip_distance, na.rm = TRUE)
   y_range <- range(data$fare_amount, na.rm = TRUE)
+
+  # Normalize data for plotting within viewport
+  data$norm_trip_distance <- (data$trip_distance - min(x_range)) / (max(x_range) - min(x_range))
+  data$norm_fare_amount <- (data$fare_amount - min(y_range)) / (max(y_range) - min(y_range))
 
   # Define color palette
   ratecode_colors <- rainbow(length(unique(data$RatecodeID)))
@@ -333,25 +338,23 @@ plot_grid <- function(data) {
   # Basic scatter plot
   for (i in unique(data$RatecodeID)) {
     subset_data <- subset(data, RatecodeID == i)
-    points <- pointsGrob(subset_data$trip_distance, subset_data$fare_amount,
+    points <- pointsGrob(subset_data$norm_trip_distance, subset_data$norm_fare_amount,
                          pch = 16, gp = gpar(col = color_mapping[as.character(i)], cex = 0.8))
     grid.draw(points)
   }
 
-  # Adding axes
-  grid.xaxis()
-  grid.yaxis()
-
   # Manually add axis labels
-  x_at <- seq(min(x_range), max(x_range), length.out = 5)
-  y_at <- seq(min(y_range), max(y_range), length.out = 5)
+  x_ticks <- seq(0, 1, length.out = 5)
+  y_ticks <- seq(0, 1, length.out = 5)
+  x_labels <- round(seq(min(x_range), max(x_range), length.out = 5), 1)
+  y_labels <- round(seq(min(y_range), max(y_range), length.out = 5), 1)
 
-  for (x in x_at) {
-    grid.text(round(x, 1), x = unit(x, "native"), y = unit(min(y_range) - 0.05*(max(y_range) - min(y_range)), "native"), just = "top")
+  for (i in 1:length(x_ticks)) {
+    grid.text(x_labels[i], x = unit(x_ticks[i], "npc"), y = unit(-0.02, "npc"), just = "top")
   }
 
-  for (y in y_at) {
-    grid.text(round(y, 1), x = unit(min(x_range) - 0.05*(max(x_range) - min(x_range)), "native"), y = unit(y, "native"), just = "right")
+  for (i in 1:length(y_ticks)) {
+    grid.text(y_labels[i], x = unit(-0.02, "npc"), y = unit(y_ticks[i], "npc"), just = "right")
   }
 
   # Labels and titles
