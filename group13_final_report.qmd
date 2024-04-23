@@ -24,7 +24,6 @@ New York, the city that never sleeps, has a densely populated city, meaning not 
 
 Group 13 will be analyzing the Taxi cab ride data from January to June of 2021 to detect any noticeable relationships between the columns of the dataset. For example, the relationship between trip distance and fare price, the most popular destinations to take a Taxi, the average trip time, and so on. In addition, Group 13 will also see if taxicab ride usage spikes during key events or holidays, such as MLK day.
 
-
 ## Data Overview
 
 The dataset consists of 18 columns and approximately 30 million rows, representing individual taxi trips. Notable columns include pickup and dropoff times, trip distance, and fare amount, among others.
@@ -38,13 +37,15 @@ Data cleaning steps included removing records outside the specified timeframe, f
 # Analysis/Commentary and Interpretation
 
 ## Plot1:
-This is the main relationship we really looked at. Fare V Distance Traveled
-We are examining the relationship between the trip distance and the amount the person got charged for their fare using a scatterplot. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.This suggests that there is a positive correlation between trip distance and fare amount. In other words, longer trips tend to result in higher fare amounts. The scatter plot provides a quick and intuitive way to observe the trend and relationship between these two variables.
+
+This is the main relationship we really looked at. Fare V Distance Traveled We are examining the relationship between the trip distance and the amount the person got charged for their fare using a scatterplot. We can see as the trip distance increases, the fare amount increases as well. This reveals a strong linear relationship between trip distance and fare amount.This suggests that there is a positive correlation between trip distance and fare amount. In other words, longer trips tend to result in higher fare amounts. The scatter plot provides a quick and intuitive way to observe the trend and relationship between these two variables.
 
 ## Plot2:
+
 Plot2 is a scatterplot that is depicting the relationship between taxi trip duration and total amount charged. Each point on the plot represents a specific trip, with the x-coordinate indicating the duration and the y-coordinate showing the total amount charged. The use of blue color enhances visibility. Analyzing the plot can reveal insights into how total charges vary with trip duration, identifying patterns or outliers in the dataset. This visualization is valuable for exploring underlying patterns in taxi trip data and potentially providing insights into factors influencing fare pricing or revenue generation in taxi services.
 
 ## Plot3:
+
 Plot3 is a violin plot used to visually compare fare distributions across different rate codes. This plot is essential for identifying patterns, outliers, and skewness in fare amounts. The inclusion of median points and labels highlights central tendencies within each rate code. Beyond analysis, the plot serves as a clear communication tool, aiding stakeholders in making informed decisions related to pricing strategies and operational planning based on observed fare variations. Rate Code IDs: 1. Standard rate 2. JFK 3. Newark 4. Nassau or Westchester 5. Negotiated fare 6. Group ride 99. Unknown
 
 We know that: Standard Rate: The most common fare rate, applied to most metered trips within the city. JFK: A flat fare for trips between JFK Airport and Manhattan. This rate is set to offer a predictable fare for travelers to and from this major airport. Newark: A special fare rate for trips to Newark Liberty International Airport, which may include surcharges or a flat rate, depending on the jurisdictional agreements and regulations. Nassau or Westchester: These rates apply to trips that go beyond the city limits to Nassau County or Westchester County. Fares might be metered at a different rate or negotiated based on the distance. Negotiated Fare: Fares that are not determined by the meter but are agreed upon by the driver and passenger before the trip begins. This might apply to trips outside the typical service areas or under special circumstances. Group Ride: Some jurisdictions may allow taxis to offer shared rides at a discounted rate. The specifics can vary, including how fares are split among passengers. Other Special Rates/ Unknown: Depending on the local regulations, there might be additional special rates for trips to other specific destinations or under certain conditions (e.g., rush hour rates, holiday rates, etc.). This code might be used for trips where the applicable rate code was not properly recorded or is otherwise unspecified.
@@ -53,22 +54,26 @@ We were curious to know why the rate code had such a wide range. Through our res
 
 This plot was extremely important for understanding more about our killer plot
 
-
 ## Plot 4:
+
 Plot4 is a density plot with overlaid lines for both pick-up and drop-off locations, making it easy to compare their distributions. We can see that the most popular pick up and drop off locations are very similar, suggesting important points of interest that people get picked up and dropped off from. This could be airports, famous tourist destinations, etc. The red lines are the pickup locations, and the blue lines are the drop off locations.The density plot provides a visual representation of spatial patterns, offering actionable insights for businesses, city planners, and transportation services to make informed decisions and optimize their operations.
 
 We were wondering what these humps came from, and we figured out that those areas are airports/other high areas of interest.
 
 ## Plot5:
+
 Plot5 plot shows the total number of rides per day between Jan and Mar. The purpose of this code is to visualize the trend in the number of taxi rides per day in New York City between January and March. We have observed a consistent dip in the number of rides around every 6 days, especially on Sundays, suggesting a pattern of reduced taxi usage on weekends. This implies that people tend to stay at home or travel less on Sundays in New York during the specified time period.
 
 ## Plot6:
+
 Plot6 is a time series plot using ggplot2 to visualize the daily total fare amounts. It first aggregates the data by day, calculating the sum of fare amounts for each day. The resulting plot depicts the trend in total fare amounts over time, with dates on the x-axis and total fare amounts on the y-axis.This visualization is valuable for discerning patterns, trends, and potential correlations with external events or holidays, offering insights into the overall performance of a transportation system.
 
 ## Plot7:
+
 Plot7 is a heatmap that can illustrate the concentration of taxi pickups across different times of the day and days of the week. The resulting plot helps in identifying patterns and peak usage periods for taxi services. It can be utilized by taxi service providers for operational optimization, service planning, and targeted marketing based on observed patterns in pickup data.
 
 ## Plot8:
+
 Integrating the insights from the daily number of rides, total fare amounts, and the heatmap of taxi pickups unveils a multifaceted narrative of taxi service dynamics in New York City. The synchronization between the volume of rides and fare accumulation suggests a direct correlation between passenger demand and revenue generation, underpinned by the predictable yet complex patterns of urban mobility. Meanwhile, the heatmap adds depth to this story, highlighting the temporal and geographical nuances of taxi usage. We see a drop in demand for taxi pickup services as a pattern every 7 days. This is also supported by the matching pattern seen in the other graphs. The heatmap then helps provide further insight in which the count of pickups on Sundays are significantly lower than other week days.
 
 In addition, we see a sharp decrease in fare and pickup amounts in late January and early February. It can be inferred this decrease also occurred due to a sharp decrease in temperature in New York.
@@ -76,18 +81,23 @@ In addition, we see a sharp decrease in fare and pickup amounts in late January 
 Plot8 depicts the matching correlations between fare amount and amount of pickups further enriching understandings of the taxi service landscape.
 
 ## Plot9:
+
 Plot9 is a bar chart, illustrating the distribution of rides based on the number of passengers, offering insights into common group sizes for travel. Understanding passenger patterns aids in the development of targeted marketing strategies, optimizing user experience, and shaping business policies. Lastly, it offers a data-driven approach to enhance overall service efficiency, resource allocation, and user satisfaction within the transportation industry.
 
 ## Plot10:
+
 Displayed in plot10 is the relationship between tip amounts and total amounts from the dataset. The x-axis represents the tip amounts, and the y-axis represents the total amounts. We can observe a positive correlation corroborating an intuitive relationship that is represented between the total amount of the fare and the tip given. It shows how our data can also be affected
 
 ## Plot11:
+
 This plot visualizes the distribution of trip times for rides, focusing on those with a duration of less than 100 minutes. The resulting histogram provides insights into the frequency or count of rides across different trip time intervals. We can see that most of the rides last between 5 and 10 minutes, with a trailing tail for longer rides. The data shows a right-skewed distribution suggesting that most rides have relatively short durations (between 5 and 10 minutes), with fewer rides taking longer durations. This aligns with the common expectation that taxi rides are typically short-distance travels. The truncation at 100 minutes implies a focus on the majority of rides, excluding potential outliers with very long durations.
 
 ## Plot12:
+
 The scatter plot below visually represents the relationship between mean fare amounts and the number of passengers in taxi trips. The x-axis represents the passenger count, indicating the number of passengers in a taxi trip. The y-axis represents the mean fare amount, which is the average fare amount for trips with a specific passenger count.By analyzing trends and patterns, this visualization aids in understanding how pricing varies with passenger count. The importance lies in its potential impact on decision-making within the taxi industry, influencing pricing strategies, resource allocation, and overall operational efficiency. Additionally, insights from this analysis can contribute to enhancing customer experience and informing policy and regulation decisions, making it a valuable tool for stakeholders and policymakers alike.
 
 ## Plot13 & Plot14
+
 The analysis of trip time against fare amount typically reveals a positive correlation: as trip time increases, so does the fare amount. This relationship is expected since longer trips, in terms of time, often cover greater distances or encounter traffic conditions that extend the journey, thereby increasing the fare. However, the strength of this relationship can vary significantly across different RateCodeIDs.
 
 For example, standard rates (RateCodeID 1) usually show a linear increase in fare with time, reflecting a straightforward time-distance-cost relationship. In contrast, flat rates to specific destinations (such as RateCodeID 2 for JFK airport trips) may show less variability in fare with time since the fare is predetermined, irrespective of trip duration. This distinction highlights how different pricing structures (captured by RateCodeID) can affect the fare-time relationship.
@@ -97,7 +107,6 @@ Similarly, the relationship between trip distance and fare amount is generally p
 For instance, trips under standard metered rates (RateCodeID 1) display a clear linear relationship between distance and fare, as expected. However, for trips with special rate codes, such as those to airports (RateCodeID 2 for JFK, RateCodeID 3 for Newark), the distance-fare relationship might not follow the standard linear pattern due to flat-rate pricing. These special rate codes introduce variations in the distance-fare correlation that are not present under standard metered fares.
 
 There is only one point with a RateCodeID of 6, signaling a group ride. This is just a ride where you share with strangers. Out of the taxi cab rides we took, only one was a group ride. This is most likely because group rides are very difficult to get in a taxi. These can be observed in tables
-
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 options(bitmapType='cairo')
@@ -187,7 +196,7 @@ dcon <- dbConnect(SQLite(), dbname = "jan_to_mar_taxi_2021.db")
 #dbDisconnect(dcon)
 ```
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
 dbListTables(dcon)
 ```
 
@@ -206,7 +215,7 @@ df <- df[sampled_indices, ]
 
 # Killer Plot: Fare Price vs Distance Traveled, RatecodeID, Time of Day
 
-[Plz fill in] - Kyle
+\[Plz fill in\] - Kyle
 
 # Advanced Questions
 
@@ -275,7 +284,7 @@ predictions
 
 We can see a strong positive correlation between the trip distance and fare amount for the taxis. For every mile increase in the trip distance, the fare amount increases by around \$2.78. We can also see a fixed rate of around \$3.79. The NYC taxi fare is \$3, and costs 70 extra cents per 1/5 mile. We can see that our model is very accurate based on these findings. In addition, the R-squared value is .933, which signifies a strong correlation between the two variables. Due to the large sample size, our error for both the intercept and the slope are very low. The residuals seem to have no noticeable pattern, suggesting that the model is well-fitted to the data. In addition, the QQ plot does not look gaussian, as the upper and lower theoretical quantiles do not follow the sample quantiles.
 
-```{r, echo = FALSE, results = 'hide'}
+```{r, echo = FALSE}
 x <- df$trip_distance
 y <- df$fare_amount
 
@@ -341,16 +350,19 @@ ehat = residuals(model)
 plot(yhat, ehat)
 abline(h=0)
 ```
+
 ```{r, echo = FALSE}
 rhat = rstandard(model)
 qqnorm(rhat)
 qqline(rhat)
 ```
+
 # Conclusion
 
 Our comprehensive analysis of NYC taxi patterns from January to March 2021 has provided valuable insights into the dynamics of urban transportation within the city. Through meticulous data cleaning, rigorous statistical analysis, and thoughtful interpretation, we have identified several key findings that not only highlight the behavior of taxi usage but also suggest implications for city planners, taxi operators, and policy makers.
 
 ## Key Takeaways
+
 Distance and Fare Relationship: We observed a strong linear relationship between trip distance and fare amount, confirming the expected correlation where longer trips result in higher fares. This foundational understanding assists in fare estimation and regulation, ensuring fair pricing for consumers and equitable compensation for taxi operators.
 
 Temporal Patterns in Taxi Usage: Our analysis revealed distinct patterns in taxi usage throughout the week, with a notable decrease in ride counts on Sundays. This pattern suggests a lower demand for taxis during weekends, possibly due to reduced work-related commuting. Understanding these patterns can help in optimizing taxi fleet management and operational efficiency.
@@ -361,7 +373,14 @@ Geographic Trends: The density plots of pickup and dropoff locations indicated t
 
 Fare Structure Complexity: The examination of different fare rate codes revealed the complexity of the fare structure in NYC taxis. Special rates for airports and negotiated fares introduce variability in pricing, which can affect customer satisfaction and predictability in travel planning.
 
+**Implications for Stakeholders:**
+
+-   **For City Planners and Policy Makers**: Our findings suggest areas of focus such as improving traffic flow in high-density areas, considering dynamic pricing models for taxis, and enhancing the robustness of the city's transportation infrastructure against environmental impacts.
+
+-   **For Taxi Operators**: There is an opportunity to adjust service availability to align with the demonstrated demand patterns, potentially increasing profitability during peak times and reducing operational costs during off-peak times.
+
 ## Conclusion
+
 Further studies could expand on our work by integrating more diverse data sources such as ride-sharing services, public transportation logs, and traffic data to create a more holistic view of urban mobility. Additionally, exploring the impact of socio-economic factors on taxi usage patterns could yield deeper insights into the equity and accessibility of transportation services in New York City.
 
 In conclusion, our project not only sheds light on the current state of taxi usage in New York City but also provides a data-driven foundation for future enhancements in urban transportation planning and policy formulation. As the city evolves, continuous analysis such as ours will be essential in adapting to the changing needs of its residents and visitors.
@@ -398,7 +417,6 @@ ggplot(df, aes(x = trip_distance, y = fare_amount)) +
 ```
 
 # Plot 2 Scatterplot of Trip Time and Total Amount
-
 
 ```{r, echo = FALSE}
 # Fit a linear model
@@ -439,7 +457,6 @@ plt <- ggplot(df, aes(x = as.factor(RatecodeID), y = fare_amount)) +
 suppressWarnings(print(plt))
 ```
 
-
 # Plot 4 Density of Pick up and Drop off location
 
 ```{r, echo = FALSE}
@@ -464,7 +481,6 @@ legend("topright", # Position of the legend within the plot area
 
 # Plot 5 Line Graph of Number of Rides Per Day
 
-
 ```{r, echo = FALSE}
 # Line chart of month and number of taxi trips
 # Assuming df is your dataframe and tpe_pickup_datetime is the column with dates
@@ -482,7 +498,6 @@ plot(daily_counts$Count, type = "l", xaxt = "n", ylim = c(0, max_count), main = 
 ```
 
 # Plot 6 Daily Total Fare Amount
-
 
 ```{r, echo = FALSE}
 # Aggregate data for total daily fare
@@ -579,7 +594,6 @@ hist(trip_time,main = "Histogram of Trip Time",
      xlab = "Trip Time")
 ```
 
-
 # Plot 12 Scatter plot between mean fare amount and passenger count
 
 ```{r, echo=FALSE}
@@ -594,7 +608,8 @@ ggplot(mean_fare, aes(x = as.numeric(passenger_count), y = mean_fare_amount)) +
   labs(title = "Mean Fare Amount vs. Passenger Count", x = "Passenger Count", y = "Mean Fare Amount ($)") +
   scale_x_continuous(breaks = 1:max(as.numeric(mean_fare$passenger_count)), labels = 1:max(as.numeric(mean_fare$passenger_count)))
 ```
-# Plot13 
+
+# Plot13
 
 ```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
 # For Trip Distance vs. Fare Amount
@@ -608,8 +623,8 @@ ggplot(df, aes(x = trip_distance, y = fare_amount)) +
   theme_minimal() + 
   theme(legend.position = "none")
 ```
-# Plot14
 
+# Plot14
 
 ```{r, echo = FALSE, fig.align='left', fig.width=13, fig.height=9}
 # For Trip Time vs. Fare Amount
@@ -623,4 +638,3 @@ ggplot(df, aes(x = trip_time, y = fare_amount)) +
   theme_minimal() +
   theme(legend.position = "none")
 ```
-
