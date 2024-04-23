@@ -312,26 +312,47 @@ set.seed(24246452)
 sampled_indices <- sample(nrow(ddf), size = 100000)
 ddf <- ddf[sampled_indices, ]
 ddf$pickup_time <- as.POSIXct(ddf$pickup_time, format = "%m/%d/%Y %I:%M:%S %p")
+```
+
+```{r}
 plot_grid <- function(data) {
-  pushViewport(viewport(layout = grid.layout(1, 1)))
+  grid.newpage()
+  vp <- viewport(layout = grid.layout(1, 1))
+  pushViewport(vp)
   
   # Define the range of the data
-  x_range <- range(data$trip_distance)
-  y_range <- range(data$fare_amount)
+  x_range <- range(data$trip_distance, na.rm = TRUE)
+  y_range <- range(data$fare_amount, na.rm = TRUE)
+
+  # Define color palette
+  ratecode_colors <- rainbow(length(unique(data$RatecodeID)))
+
+  # Map RatecodeID to colors
+  color_mapping <- setNames(ratecode_colors, unique(data$RatecodeID))
 
   # Basic scatter plot
   for (i in unique(data$RatecodeID)) {
     subset_data <- subset(data, RatecodeID == i)
     points <- pointsGrob(subset_data$trip_distance, subset_data$fare_amount,
-                         pch = 16, gp = gpar(col = rainbow(length(unique(data$RatecodeID)))[i], cex = 0.8))
+                         pch = 16, gp = gpar(col = color_mapping[as.character(i)], cex = 0.8))
     grid.draw(points)
   }
 
   # Adding axes
-  grid.xaxis(at = unit(seq(from = min(x_range), to = max(x_range), length.out = 5), "native"), 
-             label = seq(from = min(x_range), to = max(x_range), length.out = 5))
-  grid.yaxis(at = unit(seq(from = min(y_range), to = max(y_range), length.out = 5), "native"),
-             label = seq(from = min(y_range), to = max(y_range), length.out = 5))
+  grid.xaxis()
+  grid.yaxis()
+
+  # Manually add axis labels
+  x_at <- seq(min(x_range), max(x_range), length.out = 5)
+  y_at <- seq(min(y_range), max(y_range), length.out = 5)
+
+  for (x in x_at) {
+    grid.text(round(x, 1), x = unit(x, "native"), y = unit(min(y_range) - 0.05*(max(y_range) - min(y_range)), "native"), just = "top")
+  }
+
+  for (y in y_at) {
+    grid.text(round(y, 1), x = unit(min(x_range) - 0.05*(max(x_range) - min(x_range)), "native"), y = unit(y, "native"), just = "right")
+  }
 
   # Labels and titles
   grid.text("Distance (miles)", x = unit(0.5, "npc"), y = unit(-0.1, "npc"), just = "centre")
@@ -341,7 +362,7 @@ plot_grid <- function(data) {
   popViewport()
 }
 
-# Call the plotting function
+# Call the plotting function to draw the plot
 plot_grid(ddf)
 ```
 
@@ -510,3 +531,7 @@ Fare Structure Complexity: The examination of different fare rate codes revealed
 Further studies could expand on our work by integrating more diverse data sources such as ride-sharing services, public transportation logs, and traffic data to create a more holistic view of urban mobility. Additionally, exploring the impact of socio-economic factors on taxi usage patterns could yield deeper insights into the equity and accessibility of transportation services in New York City.
 
 In conclusion, our project not only sheds light on the current state of taxi usage in New York City but also provides a data-driven foundation for future enhancements in urban transportation planning and policy formulation. As the city evolves, continuous analysis such as ours will be essential in adapting to the changing needs of its residents and visitors.
+
+```{r, echo = FALSE}
+on.exit(dbDisconnect(dcon), add = TRUE)
+```
